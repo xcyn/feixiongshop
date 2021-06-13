@@ -1,0 +1,29 @@
+<view class="order-container">
+  <van-cell-group class="order-title" title="收货地址">
+    <van-cell bind:tap="handleGoAddress" center title="我的地址" is-link label="我的地址: 详细地址" />
+  </van-cell-group>
+  <view class="mt20">
+    <van-cell-group class="order-title" title="商品详情">
+      <view class="goodList">
+        <van-card
+          num="2"
+          price="2.00"
+          desc="描述信息"
+          title="商品标题"
+          thumb="/images/index/banner1.jpeg"
+        />
+      </view>
+    </van-cell-group>
+  </view>
+  <view class="mt20">
+    <van-cell-group class="order-title" title="总计金额">
+      <van-cell title="商品" value="¥2.00" />
+    </van-cell-group>
+  </view>
+  <van-submit-bar
+  price="{{ 200 }}"
+  button-text="提交订单"
+  bind:submit="handleSubmit"
+/>
+<van-dialog id="van-dialog" />
+</view>

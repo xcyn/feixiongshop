@@ -1,0 +1,87 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="my-top">
+    <!-- 登陆成功的信息展示 -->
+    <view wx:if="{{isLogin}}">
+      <van-image 
+        width="100" 
+        height="100"
+        radius="50%"
+        fit="cover"
+        src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+        <view class="logo-name">
+          <span>熊川宇</span>
+        </view>
+        <view class="order-status-c">
+          <view class="img" bind:tap="handleGoOrderList" >
+            <image src="/images/my/topay.png"></image>
+            <view>
+              待付款
+            </view>
+          </view>
+          <view class="img" bind:tap="handleGoOrderList" >
+            <image src="/images/my/fahuo.png"></image>
+            <view>
+              待发货
+            </view>
+          </view>
+          <view class="img" bind:tap="handleGoOrderList" >
+            <image src="/images/my/shouhuo.png"></image>
+            <view>
+              待收货
+            </view>
+          </view>
+          <view class="img" bind:tap="handleGoOrderList" >
+            <image src="/images/my/shouhou.png"></image>
+            <view>
+              售后
+            </view>
+          </view>
+        </view>
+    </view>
+    <!-- 登陆失败的信息展示 -->
+    <view wx:if="{{!isLogin}}">
+      <van-image 
+        width="100" 
+        height="100"
+        radius="50%"
+        fit="cover"
+        src="/images/my/nologin.png"/>
+        <view class="login-btn">
+          <van-button type="primary" size="small">立即登录</van-button>
+        </view>
+    </view>
+  </view>
+  <view class="my-bottom">
+    <view class="my-info">
+      <van-cell-group>
+        <van-cell title="收货地址" is-link bind:tap="handleGoAddress" />
+        <van-cell bindtap="handleAboutAs" title="关于我们" is-link border="{{ false }}"/>
+      </van-cell-group>
+    </view>
+    <view class="login-info">
+      <van-cell-group>
+        <van-cell title="退出登陆" is-link />
+      </van-cell-group>
+    </view>
+    <view class="yanfa-info">
+      <van-cell-group border="{{ false }}">
+        <van-cell title="研发: 熊川宇"/>
+      </van-cell-group>
+    </view>
+  </view>
+  <!-- <main-footer class="main-footer"></main-footer> -->
+
+  <!-- 关于我们-modal框 -->
+  <van-dialog
+  use-slot
+  title="关注服务号: 飞熊网"
+  show="{{ showabout }}"
+  bind:close="handleCloseAbout"
+>
+  <view>
+    <view class="ewm-title">微信号: small-bear-21</view>
+    <image class="ewm" src="/images/my/xcy-ewm.jpeg" />
+  </view>
+</van-dialog>
+</view>

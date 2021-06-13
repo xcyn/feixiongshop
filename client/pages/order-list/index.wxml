@@ -1,0 +1,27 @@
+<!--index.wxml-->
+<view class="container">
+  <van-tabs sticky class="order-list-c">
+    <van-tab title="全部">
+      <order-item/>
+      <order-item/>
+      <order-item/>
+      <order-item/>
+    </van-tab>
+    <van-tab title="待支付">
+      <order-item/>
+      <order-item/>
+    </van-tab>
+    <van-tab title="待发货">
+      <order-item/>
+    </van-tab>
+    <van-tab title="待收货">
+      <order-item/>
+    </van-tab>
+    <van-tab title="已完成">
+      <order-item/>
+    </van-tab>
+    <van-tab title="已取消">
+      <order-item/>
+    </van-tab>
+  </van-tabs>
+</view>

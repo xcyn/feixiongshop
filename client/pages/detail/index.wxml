@@ -1,0 +1,52 @@
+<view class="good-container">
+  <view class="good-top">
+    <view class="good-banner">
+      <image class="swiper-item-img" src="/images/index/banner1.jpeg" />
+    </view>
+    <view class="good-info">
+      <view class="good-price">
+        ¥ 169
+      </view>
+      <view class="good-name">
+        前端基础课程
+      </view>
+      <view class="good-buy">
+        已售 10件
+      </view>
+      <view class="good-num">
+        还剩 100件
+      </view>
+    </view>
+    <view class="good-detail">
+      <view class="good-detail-title">
+        商品详情
+      </view>
+      <view class="good-detail-content">
+        <image class="swiper-item-img" src="/images/index/banner1.jpeg" />
+        <image class="swiper-item-img" src="/images/index/banner2.jpeg" />
+      </view>
+    </view>
+  </view>
+  <van-goods-action class="goods-action">
+    <van-goods-action-button text="立即购买" bind:tap="showPopup" />
+  </van-goods-action>
+  <van-popup 
+  custom-style="height: 400rpx;"
+  position="bottom" 
+  show="{{ show }}" 
+  bind:close="onClose">
+    <van-card
+      num="1"
+      price="2.00"
+      desc="描述信息"
+      title="商品标题"
+      thumb="/images/index/banner1.jpeg"
+    />
+    <view class="good-stepper">
+      <van-stepper value="{{ 1 }}" bind:change="onChange" />
+    </view>
+    <van-goods-action class="goods-action">
+      <van-goods-action-button text="立即购买" bind:tap="handleBuy" />
+    </van-goods-action>
+  </van-popup>
+</view>

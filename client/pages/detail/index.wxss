@@ -1,0 +1,69 @@
+/**index.wxss**/
+.good-container {
+  display: flex;
+  flex-direction: column;
+}
+.good-top {
+  flex: 1;
+  overflow: hidden;
+}
+.good-banner {
+  width: 750rpx;
+}
+.swiper-item-img {
+  width: 100%;
+  height: 300rpx;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.good-price {
+  color: red;
+  font-size: 40rpx;
+  padding: 10rpx;
+}
+
+.good-name {
+  font-size: 32rpx;
+  padding: 10rpx;
+}
+
+.good-buy {
+  font-size: 28rpx;
+  padding: 10rpx;
+  color: rgba(0,0,0,0.3);
+}
+
+.good-num {
+  font-size: 28rpx;
+  padding: 10rpx;
+  color: rgba(0,0,0,0.3);
+}
+
+.good-detail {
+  padding: 10rpx;
+}
+
+.good-detail-title {
+  padding: 0 10rpx;
+  border-left: 4rpx solid red;
+}
+
+.good-detail-content {
+  width: 730rpx;
+  padding-top: 20rpx;
+}
+
+.goods-action {
+  height: 80rpx;
+}
+
+.good-stepper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10rpx;
+}
+
+.good-stepper-buy {
+  width: 375rpx;
+}

@@ -1,0 +1,4 @@
+/**index.wxss**/
+.custom-icon {
+  font-size: 40rpx;
+}

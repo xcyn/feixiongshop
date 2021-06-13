@@ -1,0 +1,7 @@
+.container-setting {
+  height: 100rpx;
+  display: flex;
+}
+.container-setting-c {
+  height: 100rpx;
+}

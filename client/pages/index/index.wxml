@@ -1,0 +1,55 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="container-top">
+    <!-- 背景轮播图 -->
+    <view class="banner">
+      <swiper class="banner-swiper" indicator-dots="{{false}}"
+          autoplay="{{true}}" interval="{{4000}}" duration="{{1000}}">
+          <block wx:for="{{background}}" wx:key="index">
+            <swiper-item>
+              <image class="swiper-item-img" src="/images/index/banner{{index + 1}}.jpeg" />
+            </swiper-item>
+          </block>
+        </swiper>
+    </view>
+    <!-- 优惠通知 -->
+    <view class="notice">
+      <image class="notice-logo" src="/images/index/notice.png" />
+      <view class="notice-right" bindtap="handleNoticeDetail">
+        <van-notice-bar background="#fff" class="notice-scroll-bar" scrollable text="优惠多多，戳戳我了解详情" />
+        <image class="notice-right-icon" src="/images/index/arrow-right.png" />
+      </view>
+    </view>
+    <!-- 商品出售 -->
+    <view class="good-c">
+      <view class="good-title">
+        <image class="good-title-logo" src="/images/index/goodslist.png" /><span class="good-title-text">推荐商品</span>
+      </view>
+      <view class="good-list">
+        <view class="good-item" wx:for="{{goods}}" wx:key="index">
+          <view class="good-item-logo">
+            <image src="/images/index/goodslist.png" />
+          </view>
+          <view class="good-des">
+            <view class="good-des-title">前端基础课程</view>
+            <view class="good-des-price">¥10</view>
+            <van-button data-id="{{index + 1}}" bindtap="handleGoDetail" type="primary" size="small">查看详情</van-button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <van-dialog
+  use-slot
+  title="公告详情"
+  show="{{ showNoticeDetail }}"
+  bind:close="handleCloseNotice"
+>
+  <view class="notice-detail">
+    <view class="notice-detail-title">优惠多多，功能正在开发</view>
+    <view class="notice-detail-title">想了解更多信息，请联系</view>
+    <image class="ewm" src="/images/my/xcy-ewm.jpeg" />
+  </view>
+</van-dialog>
+  <!-- <main-footer class="main-footer"></main-footer> -->
+</view>

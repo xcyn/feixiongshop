@@ -1,0 +1,20 @@
+  <!-- 底部footer -->
+  <view>
+    <view class="order-item-title">
+      <van-cell title="10212-01" value="待发货" />
+      <van-card
+        num="2"
+        price="2.00"
+        desc="描述信息"
+        title="商品标题"
+        thumb="/images/index/banner1.jpeg"
+      >
+      <view slot="footer">
+        ¥4.00
+      </view>
+      </van-card>
+      <view class="order-item-date">
+        <van-cell title="2021-06-13 80:21:05" />
+      </view>
+    </view>
+  </view>

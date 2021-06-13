@@ -1,0 +1,48 @@
+.my-top {
+  width: 100%;
+  text-align: center;
+}
+.order-status-c {
+  display: flex;
+  padding: 20rpx 120rpx;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: rgba(0,0,0,0.5);
+}
+.order-status-c image {
+  width: 60rpx;
+  height: 60rpx;
+}
+.login-btn {
+  padding-bottom: 20rpx;
+}
+
+.my-bottom {
+  width: 100%;
+}
+
+.login-info {
+  padding-top: 30rpx;
+}
+
+.yanfa-info {
+  padding-top: 310rpx;
+  text-align: center;
+  font-size: 18rpx;
+  border: 0 none;
+}
+
+.logo-name {
+  font-size: 28rpx;
+  padding: 10rpx 0;
+}
+
+.ewm-title {
+  font-size: 28rpx;
+  text-align: center;
+  padding: 30rpx;
+}
+.ewm {
+  width: 100%;
+  height: 800rpx;
+}
