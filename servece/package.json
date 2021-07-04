@@ -1,0 +1,36 @@
+{
+  "name": "feixiongstudy-servece",
+  "version": "1.0.0",
+  "description": "飞熊学习",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "cross-env ENV=development nodemon ./index.js",
+    "createDb": "npx sequelize db:create --env=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.qiyi.domain:10022/hotchat/electron-node-monitor.git"
+  },
+  "author": "xiongchuanyu",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "config": "^3.2.3",
+    "dayjs": "^1.8.16",
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa-static-server": "^1.5.2",
+    "lodash": "^4.17.11",
+    "log4js": "^5.1.0",
+    "mysql2": "^2.2.5",
+    "sequelize": "^5.22.4"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^1.19.1",
+    "sequelize-cli": "^6.2.0"
+  }
+}
