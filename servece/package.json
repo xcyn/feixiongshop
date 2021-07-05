@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@gitlab.qiyi.domain:10022/hotchat/electron-node-monitor.git"
+    "url": "git@github.com:xcyn/feixiongshop.git"
   },
   "author": "xiongchuanyu",
   "license": "ISC",
