@@ -16,3 +16,6 @@
   + sequelize-cli
   + docker
 
++ 备注
+  + config目录下有个 key-config，因为涉及小程序Secret 暂不对外开放, 开放者可自己配置自己的appid 和 secret
+
