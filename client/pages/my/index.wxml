@@ -84,4 +84,6 @@
     <image class="ewm" src="/images/my/xcy-ewm.jpeg" />
   </view>
 </van-dialog>
+<!-- 登陆组件 -->
+<login/>
 </view>

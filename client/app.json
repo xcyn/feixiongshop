@@ -57,7 +57,8 @@
     "van-tab": "@vant/weapp/tab/index",
     "van-tabs": "@vant/weapp/tabs/index",
     "main-footer": "/components/main-footer/index",
-    "order-item": "/components/order-item/index"
+    "order-item": "/components/order-item/index",
+    "login": "/components/login/index"
   },
   "sitemapLocation": "sitemap.json"
 }

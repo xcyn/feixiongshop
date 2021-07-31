@@ -1,8 +1,10 @@
-var Router = require('koa-router')
-var appRouter = new Router();
+let Router = require('koa-router')
+let appRouter = new Router();
 
 appRouter.get('/test', (ctx, next) => {
   console.log(ctx.query)
+  console.log('123123')
+  console.log(ctx.session)
   ctx.state.res({
     data: {
       query: ctx.query
@@ -16,6 +18,7 @@ appRouter.get('/ormTest', async(ctx, next) => {
       'name': 'xiongchuanyu'
     }
   })
+  ctx.session.user = 'xiongchuanyu'
   ctx.state.res({
     data: res
   })
@@ -26,7 +29,7 @@ appRouter.get('/addOrmTest', async(ctx, next) => {
     name: 'xiongchuanyu3',
   })
   ctx.state.res({
-    data: res
+    data: ctx.session
   })
 })
 

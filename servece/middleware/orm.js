@@ -4,7 +4,6 @@ const path = require('path')
 const config = require('../config/config')
 
 const dbConfig = config[process.env.ENV]
-console.log('dbConfig', dbConfig)
 
 let sqlConnectMap = {}
 
@@ -17,7 +16,6 @@ module.exports = async function Orm (ctx, next) {
      */
     connect (configName = 'default') {
       this.__config__ = dbConfig
-      console.log('this.__config__', this.__config__)
       this.__config__.name = configName
       return this
     },
@@ -39,7 +37,6 @@ module.exports = async function Orm (ctx, next) {
      * @return {this}
      */
     table (tableName) {
-      console.log('tableName', tableName)
       this.__config__.table= tableName
       return this
     },
@@ -52,8 +49,7 @@ module.exports = async function Orm (ctx, next) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
-        Table.sync(); //创建表
-        console.log('datadatadata', data)
+        Table.sync({ force: false }); //创建表
         const res = await Table.create(data)
         return res
       } catch (err) {
@@ -72,6 +68,7 @@ module.exports = async function Orm (ctx, next) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
+        Table.sync({ force: false }); //创建表
         // http://docs.sequelizejs.com/manual/models-usage.html
         // http://docs.sequelizejs.com/manual/querying.html
         const res = await Table.findAll({
@@ -82,6 +79,7 @@ module.exports = async function Orm (ctx, next) {
         })
         return res
       } catch (error) {
+        console.log('select命令出错:', error)
         throw new Error('select命令出错', error)
       }
     }
@@ -134,25 +132,11 @@ async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306,
  * @return {Sequelize define Instance}
  */
  function getTable (tableName, sequelize) {
-  var tableFile = `../tables/${tableName}.js`
+  let tableFile = `../tables/${tableName}.js`
   if (!fs.existsSync(path.resolve(__dirname, tableFile))) {
     throw new Error('模型文件没有找到')
   }
   let tableConfig = require(tableFile)
   tableConfig.options.tableName = tableConfig.name
-  return sequelize.define("user",
-  {
-    id: {
-      type: Sequelize.DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    name: Sequelize.STRING(100),
-  },
-  {
-    tableName: 'user',
-    timestamps: false,
-    freezeTableName: true
-  })
   return sequelize.define(...Object.values(tableConfig))
 }
