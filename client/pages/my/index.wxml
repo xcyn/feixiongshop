@@ -8,9 +8,9 @@
         height="100"
         radius="50%"
         fit="cover"
-        src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+        src="{{userInfo.avatarUrl || '/images/my/nologin.png'}}"/>
         <view class="logo-name">
-          <span>熊川宇</span>
+          <span>{{userInfo.nickName}}</span>
         </view>
         <view class="order-status-c">
           <view class="img" bind:tap="handleGoOrderList" >

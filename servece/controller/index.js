@@ -13,7 +13,7 @@ appRouter.get('/test', (ctx, next) => {
 })
 
 appRouter.get('/ormTest', async(ctx, next) => {
-  const res = await ctx.state.orm.db('fexiong-shop-dev').table('user').select({
+  const res = await ctx.state.orm.db('fexiong-shop-dev').table('test').select({
     where: {
       'name': 'xiongchuanyu'
     }
@@ -25,7 +25,7 @@ appRouter.get('/ormTest', async(ctx, next) => {
 })
 
 appRouter.get('/addOrmTest', async(ctx, next) => {
-  const res = await ctx.state.orm.db('fexiong-shop-dev').table('user').insert({
+  const res = await ctx.state.orm.db('fexiong-shop-dev').table('test').insert({
     name: 'xiongchuanyu3',
   })
   ctx.state.res({

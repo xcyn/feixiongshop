@@ -1,7 +1,10 @@
+const util =  require('util');
+const { exec } = require('child_process');
+const execP = util.promisify(require('child_process').exec);
 const Sequelize = require('sequelize');
-const fs = require('fs')
-const path = require('path')
-const config = require('../config/config')
+const fs = require('fs');
+const path = require('path');
+const config = require('../config/config');
 
 const dbConfig = config[process.env.ENV]
 
@@ -101,6 +104,8 @@ async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306,
     return sqlConnectMap[name]
   }
   try {
+    // 如果没有数据库自动创建数据库
+    await execP(`./node_modules/.bin/sequelize-cli db:create ${database}`)
     const sequelize = new Sequelize(database, username, password, {
       host,
       port,

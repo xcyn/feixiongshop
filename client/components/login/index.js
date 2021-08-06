@@ -36,7 +36,6 @@ Component({
     pageLifetimes: {
       // 组件所在页面的生命周期函数
       show: function () {
-        console.log('appapp', app)
         if(app.globalData.isLogin) {
           this.setData({ show: false });
         } else {
@@ -105,12 +104,13 @@ Component({
              }
           })
           let tokenRsult = result.data.authorizationToken
-          console.log('token', tokenRsult)
           wx.setStorageSync('token', tokenRsult)
           app.wxp.showToast({
             title: '登陆成功了',
           })
           this.cancelLogin()
+          app.globalData.isLogin = true
+          app.globalData.userInfo = userInfo
           app.globalEvent.emit('loginSuccess')
           return
         }
@@ -118,6 +118,8 @@ Component({
           title: '登陆成功了',
         })
         this.cancelLogin()
+        app.globalData.isLogin = true
+        app.globalData.userInfo = userInfo
         app.globalEvent.emit('loginSuccess')
      },
      cancelLogin() {

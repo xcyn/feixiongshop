@@ -34,6 +34,7 @@ app.use(koajwt({ secret: JWT_SECRET}).unless(
                '/user/login', 
                '/user/wexin-login2',
                '/ormTest',
+               '/addOrmTest',
                '/test'
           ]
      })

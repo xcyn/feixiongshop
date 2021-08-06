@@ -3,13 +3,24 @@ const app = getApp()
 
 Page({
   data: {
-    isLogin: true,
+    isLogin: app.globalData.isLogin,
+    userInfo: app.globalData.userInfo,
     showabout:false
   },
   // 事件处理函数
   bindViewTap() {
   },
   onLoad() {
+    app.globalEvent.on('loginSuccess', () => {
+      console.log('app.globalData.userInfo', app.globalData.userInfo)
+      this.setData({
+        isLogin: app.globalData.isLogin,
+        userInfo: app.globalData.userInfo
+      })
+    })
+  },
+  onUnload() {
+    app.globalEvent.off('loginSuccess')
   },
   // 关于我们
   handleAboutAs() {
