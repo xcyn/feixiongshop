@@ -12,7 +12,6 @@ Page({
   },
   onLoad() {
     app.globalEvent.on('loginSuccess', () => {
-      console.log('app.globalData.userInfo', app.globalData.userInfo)
       this.setData({
         isLogin: app.globalData.isLogin,
         userInfo: app.globalData.userInfo
