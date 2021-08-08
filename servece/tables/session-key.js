@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
-
-// http://docs.sequelizejs.com/manual/models-definition.html
+// 后期如果把session存储到服务器，会用此model
 module.exports = {
   name: 'session_key',
   columns: {
@@ -22,6 +21,7 @@ module.exports = {
       },
       allowNull: false
     },
+    // sessionKey
     sessionKey: {
       type: Sequelize.STRING(24),
       allowNull: false
@@ -29,7 +29,7 @@ module.exports = {
   },
   options: {
     tableName: 'session_key',
-    timestamps: false,
+    timestamps: true,
     freezeTableName: true
   }
 }

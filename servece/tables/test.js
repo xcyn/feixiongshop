@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-// http://docs.sequelizejs.com/manual/models-definition.html
+// 用来测试的
 module.exports = {
   name: 'test',
   columns: {
@@ -12,11 +12,22 @@ module.exports = {
     name: {
       type: Sequelize.STRING(50),
       allowNull: false
-    }
+    },
+    testIndex: {
+      type: Sequelize.STRING(50),
+      allowNull: false
+    },
   },
   options: {
     tableName: 'test',
-    timestamps: false,
+    timestamps: true,
     freezeTableName: true,
-  }
+    indexes: [
+      // Create a unique index on email
+      {
+        unique: true,
+        fields: ['testIndex']
+      }
+    ]
+  },
 }

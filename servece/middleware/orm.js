@@ -52,7 +52,7 @@ module.exports = async function Orm (ctx, next) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
-        Table.sync({ force: false }); //创建表
+        await Table.sync({ force: false }); //创建表
         const res = await Table.create(data)
         return res
       } catch (err) {
@@ -71,7 +71,9 @@ module.exports = async function Orm (ctx, next) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
-        Table.sync({ force: false }); //创建表
+        console.log('创建table...', this.__config__.table)
+        // 避免并行Table.sync
+        await Table.sync({ force: false }); //创建表
         // http://docs.sequelizejs.com/manual/models-usage.html
         // http://docs.sequelizejs.com/manual/querying.html
         const res = await Table.findAll({
@@ -110,10 +112,6 @@ async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306,
       host,
       port,
       dialect: 'mysql',
-      define: {
-        // 字段以下划线（_）来分割（默认是驼峰命名风格）
-        freezeTableName: true
-      },
       pool: {
         max: 5,
         min: 0,
