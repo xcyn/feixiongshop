@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = {
-  name: 'goods-info',
+  name: 'address',
   columns: {
     // 地址id
     id: {
@@ -36,6 +36,7 @@ module.exports = {
     }
   },
   options: {
+    tableName: 'address',
     indexes: [{
       unique: true, // 唯一索引
       fields: ['telNumber']

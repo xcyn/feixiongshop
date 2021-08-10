@@ -30,12 +30,12 @@ module.exports = {
     },
     // 商品分类
     category_id:{
-      type:DataTypes.BIGINT(11),
+      type:Sequelize.BIGINT(11),
       allowNull:false
     },
-    // 品牌 （可以用来定制不同企业）
+    // 品牌 （相当于业务编码）
     brand_id:{
-      type:DataTypes.BIGINT(11),
+      type:Sequelize.BIGINT(11),
       allowNull:false
     }
   },

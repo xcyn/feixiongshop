@@ -14,8 +14,13 @@ module.exports = {
       type:Sequelize.INTEGER(20),
       allowNull:false
     },
-    // 属性key
-    attr_key:{
+    // attr_key_id
+    attr_key_id:{
+      type:DataTypes.INTEGER(20),
+      allowNull:false
+    },
+    // 属性value
+    attr_value:{
       type:Sequelize.STRING(50),
       allowNull:false
     }

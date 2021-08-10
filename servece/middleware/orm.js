@@ -1,25 +1,21 @@
 const util =  require('util');
-const { exec } = require('child_process');
 const execP = util.promisify(require('child_process').exec);
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const config = require('../config/config');
+const { dbConfig } = require('../config/index');
 
-const dbConfig = config[process.env.ENV]
-
+// 维护已经连接好数据库
 let sqlConnectMap = {}
 
 module.exports = async function Orm (ctx, next) {
   ctx.state.orm = {
     /**
-     * 初始化数据库连接，默认连接到 default 配置
-     * @param  {String} configName 配置key
+     * 初始化配置
      * @return {this}
      */
-    connect (configName = 'default') {
+    connect () {
       this.__config__ = dbConfig
-      this.__config__.name = configName
       return this
     },
     /**
@@ -44,22 +40,46 @@ module.exports = async function Orm (ctx, next) {
       return this
     },
     /**
+     * 获取sequelize实例
+     * @return {sequelize}
+     */
+    async sequelize() {
+      const sequelize = await mysqlConnect(this.__config__);
+      return sequelize
+    },
+    /**
      * insert 操作
      * @param  {Object} data 数据
      * @return {this}
      */
-    async insert (data) {
+    async insert (data, opt) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
         await Table.sync({ force: false }); //创建表
-        const res = await Table.create(data)
+        const res = await Table.create(data, opt)
         return res
       } catch (err) {
-        throw new Error(`插入数据库失败${err}`)
+        throw new Error(`插入数据库失败:${err}`)
       }
     },
-        /**
+    /**
+     * findOrCreate 操作
+     * @param  {Object} data 数据
+     * @return {this}
+     */
+      async findOrCreate (data) {
+        const sequelize = await mysqlConnect(this.__config__);
+        try {
+          const Table = getTable(this.__config__.table, sequelize);
+          await Table.sync({ force: false }); //创建表
+          let res = await Table.findOrCreate(data);
+          return res
+        } catch (err) {
+          throw new Error(`findOrCreate语句执行失败:${err}`)
+        }
+      },
+    /**
      * select 操作
      * @param  {Object} options.where      where 语句
      * @param  {Number} options.limit      limit 语句
@@ -87,7 +107,8 @@ module.exports = async function Orm (ctx, next) {
         console.log('select命令出错:', error)
         throw new Error('select命令出错', error)
       }
-    }
+    },
+    getTable
   }
   await next()
 }
@@ -124,7 +145,7 @@ async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306,
     return sequelize
   } catch (error) {
     console.log('error', error)
-    throw new Error('数据库连接失败', error)
+    throw new Error('数据库连接失败:', error)
   }
 }
 
@@ -141,5 +162,6 @@ async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306,
   }
   let tableConfig = require(tableFile)
   tableConfig.options.tableName = tableConfig.name
+  console.log('sequelize', sequelize)
   return sequelize.define(...Object.values(tableConfig))
 }

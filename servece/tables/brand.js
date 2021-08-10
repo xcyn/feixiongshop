@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+// 商品属性类: 颜色，型号等
 module.exports = {
-  name: 'goods-info',
+  name: 'brand',
   columns: {
     id:{
       type:Sequelize.INTEGER(11),
@@ -8,19 +9,14 @@ module.exports = {
       primaryKey:true,
       autoIncrement:true
     },
-    // 商品id
-    goods_id:{
-      type:Sequelize.INTEGER(20),
+    // 品牌名称
+    brand_name:{
+      type:Sequelize.STRING(50),
       allowNull:false
-    },
-    // 商品内容描述
-    content:{
-      type:Sequelize.JSON,
-      allowNull:true
     }
   },
   options: {
-    tableName: 'goods-info',
+    tableName: 'brand',
     timestamps: true,
     freezeTableName: true
   }

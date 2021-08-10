@@ -27,6 +27,7 @@ app.use(log)
 app.use(cross)
 app.use(response)
 app.use(catchError)
+// 鉴权
 app.use(koajwt({ secret: JWT_SECRET}).unless(
      {
           path: [
@@ -35,27 +36,13 @@ app.use(koajwt({ secret: JWT_SECRET}).unless(
                '/user/wexin-login2',
                '/ormTest',
                '/addOrmTest',
-               '/test'
+               '/test',
+               /^\/goods\/*/
           ]
      })
 )
+// orm
 app.use(orm)
-// app.use(cookie)
-app.keys=['koakeys'];
-const seesionConfig = {
-     store: new store(),
-     key: 'koa:sess',   //cookie key (default is koa:sess)
-     maxAge: 86400000,  // cookie的过期时间 maxAge in ms (default is 1 days)
-     autoCommit: true,
-     overwrite: true,  //是否可以overwrite    (默认default true)
-     httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
-     signed: true,   //签名默认true
-     rolling: false,  //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
-     renew: false,  //(boolean) renew session when session is nearly expired,
-     secure: false, // 加密cookie
-     sameSite: null
-}
-app.use(session(seesionConfig, app));
 app.use(serve({rootDir: 'public', rootPath: '/public'}))
 app.use(appRoute.routes())
 app.use(appRoute.allowedMethods());

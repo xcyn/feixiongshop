@@ -4,6 +4,9 @@ const jsonwebtoken = require('jsonwebtoken');
 const WeixinAuth = require('../lib/koa2-weixin-auth');
 const WXBizDataCrypt = require('../lib/WXBizDataCrypt.js');
 const config = require('../config/key-config');
+const { dbConfig } = require('../config/index');
+let database = dbConfig.database;
+
 
 const weixinAuth = new WeixinAuth(config.miniProgramAppid, config.miniProgramAppSecret);
 
@@ -55,14 +58,14 @@ appRouter.post('/wx-login', async (ctx, next) => {
   if(decryptedUserInfo.watermark) {
     delete decryptedUserInfo.watermark
   }
-  let user = await ctx.state.orm.db('fexiong-shop-dev').table('user').select({
+  let user = await ctx.state.orm.db(database).table('user').select({
     where: {
       openId: decryptedUserInfo.openId
     }
   })
   if (!user || !user.length) {
     console.log('未查到相关用户,开始通过数据库创建用户');
-    user = await ctx.state.orm.db('fexiong-shop-dev').table('user').insert(decryptedUserInfo)
+    user = await ctx.state.orm.db(database).table('user').insert(decryptedUserInfo)
     if(user) {
       user = [user]
     }

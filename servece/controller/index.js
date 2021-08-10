@@ -1,4 +1,6 @@
-let Router = require('koa-router')
+let Router = require('koa-router');
+const { dbConfig } = require('../config/index');
+let database = dbConfig.database;
 let appRouter = new Router();
 
 appRouter.get('/test', (ctx, next) => {
@@ -13,7 +15,7 @@ appRouter.get('/test', (ctx, next) => {
 })
 
 appRouter.get('/ormTest', async(ctx, next) => {
-  const res = await ctx.state.orm.db('fexiong-shop-dev').table('test').select({
+  const res = await ctx.state.orm.db(database).table('test').select({
     where: {
       'name': 'xiongchuanyu',
     }
@@ -29,7 +31,7 @@ appRouter.get('/addOrmTest', async(ctx, next) => {
     name: 'xiongchuanyu3',
     testIndex: `${+Math.random()}`
   }
-  await ctx.state.orm.db('fexiong-shop-dev').table('test').insert(data)
+  await ctx.state.orm.db(database).table('test').insert(data)
   ctx.state.res({
     data: ctx.session
   })
