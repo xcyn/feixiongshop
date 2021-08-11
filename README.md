@@ -19,3 +19,6 @@
 + 备注
   + config目录下有个 key-config，因为涉及小程序Secret 暂不对外开放, 开放者可自己配置自己的appid 和 secret
 
++ 资料列表
+  + sequelize事务 https://www.jianshu.com/p/5d63cdc103e4
+  + sku表结构设计  https://www.jianshu.com/p/86f9596d6234

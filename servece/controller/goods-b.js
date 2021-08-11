@@ -81,4 +81,73 @@ appRouter.post('/create-goods', async(ctx, next) => {
   }
 })
 
+
+// 创建sku类型表（sku-key表 + sku-val表）
+appRouter.post('/create-skuBreed', async(ctx, next) => {
+  let { 
+    attr_key,
+    attr_values
+  } = ctx.request.body
+  const sequelize = await ctx.state.orm.db(database).sequelize()
+  // 开启事务
+  let t = await sequelize.transaction()
+  try {
+    const SkuKey = await ctx.state.orm.db(database).table('goods-attr-key').getTable('goods-attr-key', sequelize)
+    await SkuKey.sync({ force: false }); //创建表
+    let skuKeyRes = await SkuKey.create({
+      attr_key
+    }, {transaction: t})
+    const SkuVal = await ctx.state.orm.db(database).table('goods-attr-value').getTable('goods-attr-value', sequelize)
+    await SkuVal.sync({ force: false }); //创建表
+    let skuValArr = []
+    for(let k = 0; k < attr_values.length; k++) {
+      let attrVal = attr_values[k]
+      let res = await SkuVal.create({
+        attr_key_id: String(skuKeyRes.id),
+        attr_value: attrVal
+      }, {transaction: t})
+      if(res) {
+        skuValArr.push(res)
+      }
+    }
+    t.commit();
+    ctx.state.res({
+      data: {
+        skuKey: skuKeyRes,
+        skuVal: skuValArr
+      }
+    })
+  } catch (error) {
+    t.rollback();
+    ctx.state.res({
+      errno: 1000,
+      errmsg: `创建sku品类失败:${error}`,
+    })
+  }
+})
+
+
+// 创建sku
+appRouter.post('/create-goods-sku', async(ctx, next) => {
+  let { 
+    goods_id,
+    goods_attr_path,
+    goods_sku_desc,
+    price,
+    stock
+   } = ctx.request.body
+  let sku = await ctx.state.orm.db(database).table('goods-sku').findOrCreate({
+    where: {
+      goods_id,
+      goods_attr_path,
+      goods_sku_desc,
+      price,
+      stock
+    }
+  })
+  ctx.state.res({
+    data: sku[0]
+  })
+})
+
 module.exports = appRouter.routes()

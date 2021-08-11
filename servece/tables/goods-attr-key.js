@@ -9,11 +9,6 @@ module.exports = {
       primaryKey:true,
       autoIncrement:true
     },
-    // 商品id
-    goods_id:{
-      type:Sequelize.INTEGER(20),
-      allowNull:false
-    },
     // 属性key
     attr_key:{
       type:Sequelize.STRING(50),
