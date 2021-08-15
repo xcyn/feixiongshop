@@ -80,6 +80,46 @@ module.exports = async function Orm (ctx, next) {
         }
       },
     /**
+     * update 操作
+     * @param  {Object} data 数据
+     * @return {this}
+     */
+     async update ({
+      data, where
+     }) {
+      const sequelize = await mysqlConnect(this.__config__);
+      try {
+        const Table = getTable(this.__config__.table, sequelize);
+        await Table.sync({ force: false }); //创建表
+        let res = await Table.update(data, {
+          where
+        });
+        return res
+      } catch (err) {
+        throw new Error(`update语句执行失败:${err}`)
+      }
+    },
+    /**
+     * destroy 操作
+     * @param  {Object} data 数据
+     * @return {this}
+     */
+         async destroy ({
+           where
+         }) {
+          const sequelize = await mysqlConnect(this.__config__);
+          try {
+            const Table = getTable(this.__config__.table, sequelize);
+            await Table.sync({ force: false }); //创建表
+            let res = await Table.destroy({
+              where
+            });
+            return res
+          } catch (err) {
+            throw new Error(`destroy语句执行失败:${err}`)
+          }
+        }, 
+    /**
      * select 操作
      * @param  {Object} options.where      where 语句
      * @param  {Number} options.limit      limit 语句
@@ -162,6 +202,5 @@ async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306,
   }
   let tableConfig = require(tableFile)
   tableConfig.options.tableName = tableConfig.name
-  console.log('sequelize', sequelize)
   return sequelize.define(...Object.values(tableConfig))
 }

@@ -1,46 +1,46 @@
 const Sequelize = require('sequelize');
 module.exports = {
-  name: 'address',
+  name: 'address-code',
   columns: {
-    // 地址id
     id: {
       type: Sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    // 用户id
-    userId: {
-      type: Sequelize.INTEGER(11),
-      allowNull: false
-    },
-    // 用户名称
-    userName: {
+    // 省名称
+    provName: {
       type: Sequelize.STRING(50),
       allowNull: false
     },
-    // 电话
-    telNumber: {
+    // 省编码
+    provCode: {
       type: Sequelize.STRING(50),
       allowNull: false
     },
-    // 地址地区
-    region: {
-      type: Sequelize.JSON,
+    // 城市名称
+    cityName: {
+      type: Sequelize.STRING(50),
       allowNull: false
     },
-    // 地址详情
-    detailInfo: {
-      type: Sequelize.STRING(200),
+    // 城市编码
+    cityCode: {
+      type: Sequelize.STRING(50),
       allowNull: false
-    }
+    },
+    // 县名称
+    counName: {
+      type: Sequelize.STRING(50),
+      allowNull: true
+    },
+    // 县编码
+    counCode: {
+      type: Sequelize.STRING(50),
+      allowNull: true
+    },
   },
   options: {
-    tableName: 'address',
-    indexes: [{
-      unique: true, // 唯一索引
-      fields: ['telNumber']
-    }],
+    tableName: 'address-code',
     freezeTableName: true,
     timestamps: true
   }

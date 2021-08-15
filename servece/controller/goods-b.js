@@ -3,9 +3,7 @@ let Router = require('koa-router');
 const { dbConfig } = require('../config/index');
 const { get_spu_no } = require('../lib/utils')
 let database = dbConfig.database;
-let appRouter = new Router({
-  prefix: '/goods'
-});
+let appRouter = new Router();
 
 // 创建品牌
 appRouter.post('/create-brand', async(ctx, next) => {
@@ -149,5 +147,32 @@ appRouter.post('/create-goods-sku', async(ctx, next) => {
     data: sku[0]
   })
 })
+
+// 创建中国国家行政区划及行政编码接口
+appRouter.post('/create-address-code', async(ctx, next) => {
+  let { 
+    provName,
+    provCode,
+    cityName,
+    cityCode,
+    counName,
+    counCode,
+   } = ctx.request.body
+  let addressCodeRes = await ctx.state.orm.db(database).table('address-code').findOrCreate({
+    where: {
+      provName,
+      provCode,
+      cityName,
+      cityCode,
+      counName,
+      counCode
+    }
+  })
+  ctx.state.res({
+    data: addressCodeRes[0]
+  })
+})
+
+
 
 module.exports = appRouter.routes()

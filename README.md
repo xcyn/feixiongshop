@@ -16,6 +16,18 @@
   + sequelize-cli
   + docker
 
++ 项目启动
+  + 前端
+    + 微信开发者工具，引入client文件夹
+  + 服务端
+    + npm run serve
+    + 数据库
+      + 本地安装mysql
+      + mysql端口为3306
+      + 也可通过docker拉取镜像，创建容器， 可以关注 飞熊网公众号， 文章为: 飞熊商城--后端--docker部署mysql
+      + mock数据库数据
+        + 在servece目录下执行: node mock-data/index.js
+
 + 备注
   + config目录下有个 key-config，因为涉及小程序Secret 暂不对外开放, 开放者可自己配置自己的appid 和 secret
 
