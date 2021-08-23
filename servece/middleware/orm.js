@@ -127,11 +127,11 @@ module.exports = async function Orm (ctx, next) {
      * @param  {Array} options.attributes 返回字段配置
      * @return {this}
      */
-    async select ({ where, limit, offset, attributes }) {
+    async select ({ where, limit, offset, attributes, include }) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
-        console.log('创建table...', this.__config__.table)
+        console.log('搜索table...', this.__config__.table)
         // 避免并行Table.sync
         await Table.sync({ force: false }); //创建表
         // http://docs.sequelizejs.com/manual/models-usage.html
@@ -140,13 +140,21 @@ module.exports = async function Orm (ctx, next) {
           where,
           limit,
           offset,
-          attributes
+          attributes,
+          include
         })
         return res
       } catch (error) {
         console.log('select命令出错:', error)
         throw new Error('select命令出错', error)
       }
+    },
+    async model (tableName) {
+      let sequelize = await this.sequelize()
+      this.table(tableName)
+      const Table = this.getTable(this.__config__.table, sequelize)
+      await Table.sync({ force: false }); //创建表
+      return Table
     },
     getTable
   }

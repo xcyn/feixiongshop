@@ -3,7 +3,9 @@ let Router = require('koa-router');
 const { dbConfig } = require('../config/index');
 const { get_spu_no } = require('../lib/utils')
 let database = dbConfig.database;
-let appRouter = new Router();
+let appRouter = new Router({
+  prefix: '/goods'
+});
 
 // 创建品牌
 appRouter.post('/create-brand', async(ctx, next) => {
@@ -28,6 +30,24 @@ appRouter.post('/create-goods-category', async(ctx, next) => {
   })
   ctx.state.res({
     data: category[0]
+  })
+})
+
+// 创建商品分类关系表
+appRouter.post('/create-goods-category-map', async(ctx, next) => {
+  let { category_id, goods_id } = ctx.request.body
+  let categoryMaps = await ctx.state.orm.db(database).table('goods-category-map').findOrCreate({
+    where: {
+      category_id: category_id,
+      goods_id: goods_id
+    },
+    data: {
+      category_id: category_id,
+      goods_id: goods_id
+    }
+  })
+  ctx.state.res({
+    data: categoryMaps[0]
   })
 })
 

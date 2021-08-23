@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://192.168.1.6:3099'
+const API_BASE_URL = 'http://localhost:3099'
 const request = ({
   url, method, header={}, data
 }) => {

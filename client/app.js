@@ -6,6 +6,6 @@ App({
   globalData: {},
   globalEvent: (wx.globalEvent = new Event()),
   onLaunch() {
-    console.log(1)
+    console.log('进入主app完毕')
   }
 })
