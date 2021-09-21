@@ -7,7 +7,7 @@
           autoplay="{{true}}" interval="{{4000}}" duration="{{1000}}">
           <block wx:for="{{background}}" wx:key="index">
             <swiper-item>
-              <image class="swiper-item-img" src="/images/index/banner{{index + 1}}.jpeg" />
+              <image class="swiper-item-img" src="{{item.url}}" />
             </swiper-item>
           </block>
         </swiper>
@@ -28,12 +28,12 @@
       <view class="good-list">
         <view class="good-item" wx:for="{{goods}}" wx:key="index">
           <view class="good-item-logo">
-            <image src="/images/index/goodslist.png" />
+            <image src="{{item.url}}" />
           </view>
           <view class="good-des">
-            <view class="good-des-title">前端基础课程</view>
-            <view class="good-des-price">¥10</view>
-            <van-button data-id="{{index + 1}}" bindtap="handleGoDetail" type="primary" size="small">查看详情</van-button>
+            <view class="good-des-title">{{item.goods_name}}</view>
+            <view class="good-des-price">¥{{item.start_price}}</view>
+            <van-button data-id="{{item.id}}" bindtap="handleGoDetail" type="primary" size="small">查看详情</van-button>
           </view>
         </view>
       </view>

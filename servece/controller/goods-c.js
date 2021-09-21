@@ -12,6 +12,9 @@ let appRouter = new Router({
 // 地址
 const address = require('./address');
 appRouter.use(address);
+// 上传
+const upload = require('./upload');
+appRouter.use(upload);
 
 // 通过分组查询商品列表
 appRouter.get('/select-goodList-category', async(ctx, next) => {
@@ -21,17 +24,37 @@ appRouter.get('/select-goodList-category', async(ctx, next) => {
   //  表关联声明
   const goodModel = await ctx.state.orm.db(database).model('goods');
   const goodsCategoryMapModel = await ctx.state.orm.db(database).model('goods-category-map');
-  goodsCategoryMapModel.hasMany(goodModel, {foreignKey: 'id', targetKey: 'goods_id'});
+  const goodsInfoModel = await ctx.state.orm.db(database).model('goods-info');
+  goodsCategoryMapModel.belongsTo(goodsInfoModel, {foreignKey: 'goods_id', targetKey: 'goods_id', as: 'info'});
+  goodsCategoryMapModel.belongsTo(goodModel, {foreignKey: 'goods_id', targetKey: 'id'});
 
-  const goods = await goodsCategoryMapModel.findAll({
+  const goodsDb = await goodsCategoryMapModel.findAll({
     where: {
-      category_id
+      category_id,
     },
-    include: [{ 
-      model: goodModel
+    include: [{
+      model: goodModel,
+      attributes: { exclude: ['createdAt', 'updatedAt']}
+    },{
+      model: goodsInfoModel,
+      attributes: { exclude: ['createdAt', 'updatedAt']},
+      as: 'info'
     }],
+    attributes: { exclude: ['createdAt', 'updatedAt', 'category_id', 'goods_id'] }
   })
-
+  let goods = []
+  goodsDb.map(item => {
+    if(item.good) {
+      let good = item.good.get()
+      let info = item.info
+      if(info) {
+        // 取轮播第一张图片
+        let url = info.content && info.content.carousels && info.content.carousels[0]
+        good.url = url
+      }
+      goods.push(good)
+    }
+  })
   ctx.state.res({
     data: goods
   })
@@ -101,13 +124,24 @@ appRouter.get('/select-goodInfo', async(ctx, next) => {
         }
       })
     }
+    let skuMap = {}
     // 映射前端方便可用的数据结构
     let sku = goods.sku
     let skuClient = []
     if(sku && sku.length) {
       sku.map(skuItem => {
         let skuPath = skuItem.goods_attr_path
+        let skuMapKey = skuPath.join('|')
+        if(!skuMap[skuMapKey]) {
+          skuMap[skuMapKey] = {
+            price: skuItem.price,
+            stock: skuItem.stock
+          }
+        }
+        
+        console.log('skuPathskuPath', skuPath.join('|'))
         skuPath.map(pathItem => {
+          console.log('pathItem', pathItem)
           let attrAll = pathItem.split(':')
           if(!attrAll || attrAll.length !==2) {
             throw new Error('sku表数据有误')
@@ -116,21 +150,20 @@ appRouter.get('/select-goodInfo', async(ctx, next) => {
           let skuVal = attrAll[1]
           const hasSkuKey = _.findIndex(skuClient, (o)=> o.id === skuKey);
           if(hasSkuKey !== -1) {
-            skuClient[hasSkuKey].models.push({
-              skuId: skuVal,
-              skuName: valMap[`${skuKey}|${skuVal}`],
-              stock: skuItem.stock,
-              price: skuItem.price
-            })
+            const hasModelKey = _.findIndex(skuClient[hasSkuKey].models, (o)=> o.skuId === skuVal);
+            if(hasModelKey === -1) {
+              skuClient[hasSkuKey].models.push({
+                skuId: skuVal,
+                skuName: valMap[`${skuKey}|${skuVal}`]
+              })
+            }
           } else {
             skuClient.push({
               id: skuKey,
               name: keyMap[skuKey],
               models: [{
                 skuId: skuVal,
-                skuName: valMap[`${skuKey}|${skuVal}`],
-                stock: skuItem.stock,
-                price: skuItem.price
+                skuName: valMap[`${skuKey}|${skuVal}`]
               }]
             })
           }
@@ -139,6 +172,7 @@ appRouter.get('/select-goodInfo', async(ctx, next) => {
     }
     goods = goods.get();
     goods['sku'] = skuClient
+    goods['skuMap'] = skuMap
     ctx.state.res({
       data: {
         goods: goods

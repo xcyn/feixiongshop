@@ -1,4 +1,6 @@
 const dayJs = require('dayjs');
+const fs = require('fs');
+const path = require('path');
 
 function Sx (num) {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(num)
@@ -13,6 +15,37 @@ function get_spu_no (brand_id, category_id) {
   return res
 }
 
+async function upload2Cdn({
+  file,
+  bucket="",
+}) {
+  if(!file.name) {
+    throw new Error('file信息有误')
+  }
+  const cdnDir = '/fxsp/image'
+  // 对接cdn
+  const config = require('../config/upload-config');
+  const { BosClient } = require('bce-sdk-js');
+  const client = new BosClient(config);
+  let result
+  const headers = {
+    'Content-Length': file.size,
+    'Content-Type': file.type
+  };
+  try {
+    const uploadFile = fs.createReadStream(file.path, {start: 0, end: file.size});
+    console.log('000000', file.name)
+    let res = await client.putObject(bucket, `${cdnDir}/${file.name}`, uploadFile, headers)
+    if(res) {
+      result = `${config.endpoint}${cdnDir}/${file.name}`
+    }
+  } catch(err) {
+    // 上传失败
+  }
+  return result
+}
+
 module.exports = {
-  get_spu_no
+  get_spu_no,
+  upload2Cdn
 }

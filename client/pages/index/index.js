@@ -3,13 +3,13 @@ const app = getApp()
 
 Page({
   data: {
-    background: [{}, {}, {}],
-    goods: [{},{},{},{},{}],
+    background: [],
+    goods: [],
     showNoticeDetail: false
   },
   onLoad() {
-    if (wx.getUserProfile) {
-    }
+    this.getBannerList()
+    this.getrecommandList()
   },
   getUserProfile(e) {
     // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
@@ -23,6 +23,38 @@ Page({
         })
       }
     })
+  },
+
+  // 获取轮播图接口
+  async getBannerList() {
+    const res = await app.request({
+      url: '/goods-c/select-goodList-category',
+      method: 'get',
+      data:{ 
+        category_id: 1
+       }
+    })
+    if(res.errno === 0) {
+      this.setData({
+        background: res.data || []
+      })
+    }
+  },
+
+  // 获取推荐
+  async getrecommandList() {
+    const res = await app.request({
+      url: '/goods-c/select-goodList-category',
+      method: 'get',
+      data:{ 
+        category_id: 2
+       }
+    })
+    if(res.errno === 0) {
+      this.setData({
+        goods: res.data || []
+      })
+    }
   },
 
   // 查看商品详情

@@ -4,7 +4,6 @@ const request = ({
 }) => {
   const _url = API_BASE_URL + url
   let token = wx.getStorageSync('token')
-  console.log('data', data)
   let defHeader =  {
     'content-type': 'application/json',
     'Authorization': `Bearer ${token || ''}`
@@ -17,8 +16,6 @@ const request = ({
           data: data,
           header: header,
           success(request) {
-              console.log("response url:",_url)
-              console.log("response data:",request.data)
               resolve(request.data)
           },
           fail(error) {

@@ -1,29 +1,33 @@
 <view class="good-container">
   <view class="good-top">
     <view class="good-banner">
-      <image class="swiper-item-img" src="/images/index/banner1.jpeg" />
+      <image class="swiper-item-img" src="{{goodsInfo.info && goodsInfo.info.content && goodsInfo.info.content.carousels[0]}}" />
     </view>
     <view class="good-info">
       <view class="good-price">
-        ¥ 169
+        ¥ {{goodsInfo.start_price}}
       </view>
       <view class="good-name">
-        前端基础课程
+        {{goodsInfo.goods_name}}
       </view>
-      <view class="good-buy">
-        已售 10件
-      </view>
-      <view class="good-num">
-        还剩 100件
+      <view class="good-num" wx:if="{{goodsInfo.sku && goodsInfo.sku.length}}">
+        还剩 {{goodsInfo.stock}}件
       </view>
     </view>
     <view class="good-detail">
       <view class="good-detail-title">
         商品详情
       </view>
-      <view class="good-detail-content">
-        <image class="swiper-item-img" src="/images/index/banner1.jpeg" />
-        <image class="swiper-item-img" src="/images/index/banner2.jpeg" />
+      <view class="good-detail-content"
+      wx:if="{{goodsInfo.info.content.carousels}}"
+      >
+        <view
+          wx:for="{{goodsInfo.info.content.carousels}}"
+          wx:key="index"
+        >
+        <image
+          class="swiper-item-img" src="{{item}}" />
+        </view>
       </view>
     </view>
   </view>
@@ -31,20 +35,38 @@
     <van-goods-action-button text="立即购买" bind:tap="showPopup" />
   </van-goods-action>
   <van-popup 
-  custom-style="height: 400rpx;"
+  custom-style="min-height: 400rpx;padding-bottom: 140rpx"
   position="bottom" 
   show="{{ show }}" 
   bind:close="onClose">
     <van-card
+      custom-class="good-van-card"
       num="1"
-      price="2.00"
-      desc="描述信息"
-      title="商品标题"
-      thumb="/images/index/banner1.jpeg"
-    />
-    <view class="good-stepper">
-      <van-stepper value="{{ 1 }}" bind:change="onChange" />
-    </view>
+      price="{{goodsInfo.start_price}}"
+      desc="{{goodsInfo.goods_desc}}"
+      title="{{goodsInfo.goods_name}}"
+      thumb="{{goodsInfo.info && goodsInfo.info.content && goodsInfo.info.content.carousels[0]}}"
+    >
+      <view slot="price-top">
+        <view class="good-sku">
+          <view
+            wx:for="{{goodsInfo.sku}}"
+            wx:for-item="goodItem"
+            wx:key="index"
+          >
+          <view class="good-sku-title">
+            {{goodItem.name}}
+          </view>
+            <van-button 
+            data-item="{{item}}"
+            data-id="{{goodItem.id}}"
+            bind:tap="handleCheckSku" type="{{item.checked ? 'primary' : 'default'}}" wx:for="{{goodItem.models}}" wx:key="index" size="mini">
+              {{item.skuName}}
+            </van-button>
+          </view>
+        </view>
+      </view>
+    </van-card>
     <van-goods-action class="goods-action">
       <van-goods-action-button text="立即购买" bind:tap="handleBuy" />
     </van-goods-action>
