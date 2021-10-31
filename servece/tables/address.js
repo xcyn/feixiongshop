@@ -33,12 +33,17 @@ module.exports = {
     detailInfo: {
       type: Sequelize.STRING(200),
       allowNull: false
-    }
+    },
+    // 地址地区
+    isDefault: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true
+    },
   },
   options: {
     tableName: 'address',
     indexes: [{
-      unique: true, // 唯一索引
+      // unique: true, // 唯一索引
       fields: ['telNumber']
     }],
     freezeTableName: true,

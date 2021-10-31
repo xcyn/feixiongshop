@@ -1,9 +1,19 @@
-// 主页
+const app = getApp()
 // 主页
 import Dialog from "@vant/weapp/dialog/dialog";
 Page({
-  data: {},
+  data: {
+    isLogin: null,
+    userInfo: null,
+  },
   onLoad(options) {
+    const isLogin = app.globalData.isLogin
+    const userInfo = app.globalData.userInfo
+    console.log('userInfo', userInfo)
+    this.setData({
+      isLogin: isLogin,
+      userInfo: userInfo
+    })
   },
   showPopup() {
   },

@@ -10,8 +10,7 @@ const goods =  [
     "brand_id": "1",
     "content": {
       "carousels": {
-        "0": "http://pan.iqiyi.com/file/reliao/xY5hJsGqH_MLySEjooWKhfy-hTLDj5UXeU6r7OI_vFXEYo_w2ngqN300ODZyJmkIHA5snvsdQE4kzrijYNrhXA.png",
-        // "1": "http://pan.iqiyi.com/file/reliao/gynfOye0n7NcNYCBMpUifUrBfVNsUZUGW101pAxast3yuNl-F70cTRPya94WR0EovZbs9428dEpT0hTbSwERvg.png"
+        "0": "",
       },
       "activity": "具体价格优惠，请联系客服。微信号: 18811742305"
     }
@@ -25,7 +24,7 @@ const goods =  [
     "brand_id": "1",
     "content": {
       "carousels": {
-        0: "http://pan.iqiyi.com/file/reliao/Uq1YyYQ7DGLkYnAsbsIM9Mz6b179xvJltaSFds7EISg5fqDfDegsqcMRxEd41wdk1NV8ztMvEIsfWpAeLjDL1Q.png"
+        0: ""
       },
       "activity": "具体价格优惠，请联系客服。微信号: 18811742305"
     }
@@ -39,7 +38,7 @@ const goods =  [
     "brand_id": "2",
     "content": {
       "carousels": {
-        0: "http://pan.iqiyi.com/file/reliao/HpW_VML6nCGOkm4d-cZtUPYsRlb3rwcmfj6TYcuYD1kY2FECrk8AlsfTm-y2QZ9CK9rnobIB_NUbuTv4fTsHtw.png"
+        0: ""
       },
       "activity": "具体价格优惠，请联系客服。微信号: 18811742305"
     }

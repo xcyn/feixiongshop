@@ -12,6 +12,7 @@ appRouter.post('/create-address', async(ctx, next) => {
     telNumber,
     region,
     detailInfo,
+    isDefault
    } = ctx.request.body
   let address = await ctx.state.orm.db(database).table('address').findOrCreate({
     where: {
@@ -20,9 +21,9 @@ appRouter.post('/create-address', async(ctx, next) => {
       telNumber,
       region,
       detailInfo,
+      isDefault
     }
   })
-  console.log('address', address)
   ctx.state.res({
     data: address[0]
   })
