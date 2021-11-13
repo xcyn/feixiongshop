@@ -139,9 +139,7 @@ appRouter.get('/select-goodInfo', async(ctx, next) => {
           }
         }
         
-        console.log('skuPathskuPath', skuPath.join('|'))
         skuPath.map(pathItem => {
-          console.log('pathItem', pathItem)
           let attrAll = pathItem.split(':')
           if(!attrAll || attrAll.length !==2) {
             throw new Error('sku表数据有误')

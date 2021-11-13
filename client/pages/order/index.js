@@ -1,19 +1,38 @@
-const app = getApp()
 // 主页
+const app = getApp()
 import Dialog from "@vant/weapp/dialog/dialog";
 Page({
   data: {
+    address: {},
     isLogin: null,
     userInfo: null,
   },
   onLoad(options) {
+    const app = getApp()
     const isLogin = app.globalData.isLogin
     const userInfo = app.globalData.userInfo
     console.log('userInfo', userInfo)
+    this.getUserDefaultAddress()
     this.setData({
       isLogin: isLogin,
       userInfo: userInfo
     })
+  },
+  async getUserDefaultAddress() {
+    const userInfo = app.globalData.userInfo
+    const res = await app.request({
+      url: '/goods-c/get-user-default-address',
+      method: 'get',
+      data:{
+        userId: userInfo.id
+       }
+    })
+    if(res && res.data) {
+      this.setData({
+        address: res.data || {}
+      })
+    }
+    console.log('res', res)
   },
   showPopup() {
   },

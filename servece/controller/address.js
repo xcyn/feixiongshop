@@ -4,6 +4,28 @@ const { dbConfig } = require('../config/index');
 let database = dbConfig.database;
 let appRouter = new Router();
 
+// 获取地址
+appRouter.get('/select-address-item', async(ctx, next) => {
+  let {
+    cityCode,
+    counCode,
+    provCode
+   } = ctx.query
+  if(!cityCode || !counCode || !provCode) {
+    throw new Error('获取地址失败，参数有误')
+  } 
+  let address = await ctx.state.orm.db(database).table('address-code').select({
+    where: {
+      cityCode,
+      counCode,
+      provCode
+    }
+  })
+  ctx.state.res({
+    data: address && address[0] || null
+  })
+})
+
 // 创建地址
 appRouter.post('/create-address', async(ctx, next) => {
   let { 
@@ -14,6 +36,9 @@ appRouter.post('/create-address', async(ctx, next) => {
     detailInfo,
     isDefault
    } = ctx.request.body
+   if(!region || !region.provCode || !region.cityCode || !region.counCode) {
+    throw new Error('创建地址失败，参数有误')
+   }
   let address = await ctx.state.orm.db(database).table('address').findOrCreate({
     where: {
       userId,
@@ -125,16 +150,56 @@ appRouter.post('/update-default-address', async(ctx, next) => {
   }
 })
 
-// 查询地址
-appRouter.get('/select-address', async(ctx, next) => {
-  let { 
-    userId,
-    userName
+// 获取默认地址
+appRouter.get('/get-user-default-address', async(ctx, next) => {
+  let {
+    userId
    } = ctx.query
   let address = await ctx.state.orm.db(database).table('address').select({
     where: {
-      userId,
-      userName
+      isDefault: true,
+      userId
+    }
+  })
+  if(address && address[0]) {
+    address = address[0].get();
+    const {
+      cityCode,
+      counCode,
+      provCode
+    } = address.region
+    let addressInfo = await ctx.state.orm.db(database).table('address-code').select({
+      where: {
+        cityCode,
+        counCode,
+        provCode
+      }
+    })
+    if(addressInfo && addressInfo[0]) {
+      addressInfo = addressInfo[0].get()
+    } else {
+      throw new Error('请求失败')
+    }
+    address.provName = addressInfo.provName
+    address.cityName = addressInfo.cityName
+    address.counName = addressInfo.counName
+    address.address = `${addressInfo.provName}${addressInfo.cityName}${addressInfo.counName}`
+    ctx.state.res({
+      data: address
+    })
+  } else {
+    throw new Error('请求失败')
+  }
+})
+
+// 查询地址
+appRouter.get('/select-user-address', async(ctx, next) => {
+  let { 
+    userId
+   } = ctx.query
+  let address = await ctx.state.orm.db(database).table('address').select({
+    where: {
+      userId
     }
   })
   ctx.state.res({

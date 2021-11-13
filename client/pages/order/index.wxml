@@ -1,6 +1,6 @@
 <view class="order-container">
   <van-cell-group class="order-title" title="收货地址">
-    <van-cell bind:tap="handleGoAddress" center title="我的地址" is-link label="我的地址: 详细地址" />
+    <van-cell bind:tap="handleGoAddress" center title="{{address.address}}" is-link label="{{address.detailInfo}}" />
   </van-cell-group>
   <view class="mt20">
     <van-cell-group class="order-title" title="商品详情">

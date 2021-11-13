@@ -21,20 +21,22 @@ appRouter.post('/wx-login', async (ctx, next) => {
     sessionKeyIsValid } = ctx.request.body
   let sessionKey
   let openId
+  // 解密openId
+  let decryptedUserInfo = {}
   // 如果seesonKey未过期，直接取缓存
   if (sessionKeyIsValid) {
     let token = ctx.request.header.authorization;
     token = token.split(' ')[1]
-    console.log('token', token)
     // token有可能是空的
     if (token) {
       try {
         let payload = await util.promisify(jsonwebtoken.verify)(token, config.jwtSecret)
+        console.log('payload', payload)
         if (payload) {
           sessionKey = payload.sessionKey
+          openId = payload.openId
         }
       } catch(err) {
-        // todo-log
         throw err
       }
     }
@@ -45,24 +47,24 @@ appRouter.post('/wx-login', async (ctx, next) => {
     const token = await weixinAuth.getAccessToken(code)
     // 目前微信的 session_key, 有效期3天
     sessionKey = token.data.session_key;
-    openId = token.data.openid
+    openId = token.data.openid;
+    let pc = new WXBizDataCrypt(config.miniProgramAppid, sessionKey)
+    let info = pc.decryptData(encryptedData, iv)
+    console.log('info', info)
+    decryptedUserInfo = info
+    decryptedUserInfo.openId = openId
+    // 清楚不必要字段
+    if(decryptedUserInfo.watermark) {
+      delete decryptedUserInfo.watermark
+    }
   }
 
-  // 解密openId
-  let decryptedUserInfo
-  var pc = new WXBizDataCrypt(config.miniProgramAppid, sessionKey)
-  decryptedUserInfo = pc.decryptData(encryptedData, iv)
-  decryptedUserInfo.openId = openId
-
-  // 清楚不必要字段
-  if(decryptedUserInfo.watermark) {
-    delete decryptedUserInfo.watermark
-  }
   let user = await ctx.state.orm.db(database).table('user').select({
     where: {
-      openId: decryptedUserInfo.openId
+      openId: openId
     }
   })
+
   if (!user || !user.length) {
     console.log('未查到相关用户,开始通过数据库创建用户');
     user = await ctx.state.orm.db(database).table('user').insert(decryptedUserInfo)
@@ -70,12 +72,15 @@ appRouter.post('/wx-login', async (ctx, next) => {
       user = [user]
     }
   } else {
-    console.log('数据库中查到用户:', user[0].id, user[0].nickName);
+    user = user && user[0]
+    user = user.get()
+    decryptedUserInfo = user
+    console.log('数据库中查到用户:', user.id, user.nickName);
   }
 
   // 添加openId与sessionKey今天jwt
   let authorizationToken = jsonwebtoken.sign({
-    uid: user[0].id,
+    uid: user.id,
     nickName: decryptedUserInfo.nickName,
     avatarUrl: decryptedUserInfo.avatarUrl,
     openId: decryptedUserInfo.openId,

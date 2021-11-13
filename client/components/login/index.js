@@ -36,6 +36,7 @@ Component({
     pageLifetimes: {
       // 组件所在页面的生命周期函数
       show: function () {
+        console.log('app.globalData.isLogin', app.globalData.isLogin)
         if(app.globalData.isLogin) {
           this.setData({ show: false });
         } else {
@@ -54,6 +55,7 @@ Component({
      */
     methods: {
       async processLogin() {
+        console.log('0000')
         // https://developers.weixin.qq.com/community/develop/article/doc/00040885c386f81e96cbf93cf51013
         // 4月13日 用getUserProfile替换
         // wx.getUserInfo接口或者<button open-type="getUserInfo"/>
@@ -103,6 +105,7 @@ Component({
               sessionKeyIsValid:sessionIsValid
              }
           })
+          console.log('result', result)
           let tokenRsult = result.data.authorizationToken
           wx.setStorageSync('token', tokenRsult)
           app.wxp.showToast({
@@ -110,17 +113,34 @@ Component({
           })
           this.cancelLogin()
           app.globalData.isLogin = true
-          app.globalData.userInfo = userInfo
+          app.globalData.userInfo = result.data
           app.globalEvent.emit('loginSuccess')
           return
+        } else {
+          let loginRes = await app.wxp.login()
+          let code = loginRes.code
+          const result = await request({
+            url: '/user/wx-login',
+            method: 'post',
+            data:{ 
+              code,
+              userInfo: userInfo,
+              encryptedData,
+              iv,
+              sessionKeyIsValid:sessionIsValid
+             }
+          })
+          console.log('result', result)
+          let tokenRsult = result.data.authorizationToken
+          wx.setStorageSync('token', tokenRsult)
+          app.wxp.showToast({
+            title: '登陆成功了',
+          })
+          this.cancelLogin()
+          app.globalData.isLogin = true
+          app.globalData.userInfo = result.data
+          app.globalEvent.emit('loginSuccess')
         }
-        app.wxp.showToast({
-          title: '登陆成功了',
-        })
-        this.cancelLogin()
-        app.globalData.isLogin = true
-        app.globalData.userInfo = userInfo
-        app.globalEvent.emit('loginSuccess')
      },
      cancelLogin() {
         this.setData({ show: false });

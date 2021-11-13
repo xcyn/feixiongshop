@@ -2,3 +2,10 @@
 .custom-icon {
   font-size: 40rpx;
 }
+.order-title .van-radio {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  margin-right: 10px;
+}

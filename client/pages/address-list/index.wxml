@@ -1,14 +1,11 @@
 <view class="order-container">
   <van-cell-group class="order-title" title="地址列表">
-    <van-cell title="我的地址1" label="我的地址: 详细地址1" bind:tap="handleSelectAddress">
-      <van-icon slot="right-icon" name="edit" class="custom-icon" />
-    </van-cell>
-    <van-cell title="我的地址2" label="我的地址: 详细地址2">
-      <van-icon slot="right-icon" name="edit" class="custom-icon" />
-    </van-cell>
-    <van-cell title="我的地址3" label="我的地址: 详细地址3">
-      <van-icon slot="right-icon" name="edit" class="custom-icon" />
-    </van-cell>
+    <van-radio-group value="{{ selectId }}" bind:change="handleSelectAddress">
+      <van-cell wx:for="{{addressList}}" wx:key="id" title="{{item.title}}" label="{{item.detailInfo}}">
+        <van-radio name="{{item.id}}"></van-radio>
+        <van-icon slot="right-icon" name="edit" class="custom-icon" />
+      </van-cell>
+    </van-radio-group>
   </van-cell-group>
   <van-goods-action class="goods-action">
       <van-goods-action-button text="添加地址" bind:tap="handleGoAddAddress" />

@@ -56,6 +56,8 @@
     "van-field": "@vant/weapp/field/index",
     "van-tab": "@vant/weapp/tab/index",
     "van-tabs": "@vant/weapp/tabs/index",
+    "van-radio": "@vant/weapp/radio/index",
+    "van-radio-group": "@vant/weapp/radio-group/index",
     "main-footer": "/components/main-footer/index",
     "order-item": "/components/order-item/index",
     "login": "/components/login/index"
