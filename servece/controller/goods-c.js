@@ -15,6 +15,9 @@ appRouter.use(address);
 // 上传
 const upload = require('./upload');
 appRouter.use(upload);
+// 订单
+const order = require('./order');
+appRouter.use(order);
 
 // 通过分组查询商品列表
 appRouter.get('/select-goodList-category', async(ctx, next) => {
