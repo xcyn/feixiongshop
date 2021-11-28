@@ -6,22 +6,24 @@
     <van-cell-group class="order-title" title="商品详情">
       <view class="goodList">
         <van-card
-          num="2"
-          price="2.00"
-          desc="描述信息"
-          title="商品标题"
-          thumb="/images/index/banner1.jpeg"
+          wx:for="{{goodInfoBriefs}}"
+          wx:key="index"
+          num="{{item.num}}"
+          price="{{item.price}}"
+          desc="{{item.desc}}"
+          title="{{item.title}}"
+          thumb="{{item.thumb}}"
         />
       </view>
     </van-cell-group>
   </view>
   <view class="mt20">
     <van-cell-group class="order-title" title="总计金额">
-      <van-cell title="商品" value="¥2.00" />
+      <van-cell title="商品" value="¥{{totalFee}}.00" />
     </van-cell-group>
   </view>
   <van-submit-bar
-  price="{{ 200 }}"
+  price="{{ totalFee*100 }}"
   button-text="提交订单"
   bind:submit="handleSubmit"
 />

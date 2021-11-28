@@ -16,6 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0",
+    "bce-sdk-js": "^0.2.9",
     "config": "^3.2.3",
     "crypto": "^1.0.1",
     "dayjs": "^1.10.6",
@@ -31,12 +33,14 @@
     "lodash": "^4.17.11",
     "log4js": "^5.1.0",
     "mysql2": "^2.2.5",
+    "redis": "^3.1.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "sequelize": "^5.22.4",
     "sequelize-cli": "^6.2.0",
+    "short-uuid": "^4.2.0",
     "underscore": "^1.13.1",
-    "bce-sdk-js": "^0.2.9"
+    "weixin-pay": "^1.1.7"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

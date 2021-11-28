@@ -8,7 +8,6 @@ let appRouter = new Router({
   prefix: '/goods-c'
 });
 
-
 // 地址
 const address = require('./address');
 appRouter.use(address);

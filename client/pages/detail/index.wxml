@@ -71,4 +71,5 @@
       <van-goods-action-button text="立即购买" bind:tap="handleBuy" />
     </van-goods-action>
   </van-popup>
+  <login/>
 </view>

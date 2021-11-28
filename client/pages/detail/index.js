@@ -1,13 +1,23 @@
 // 主页
 const app = getApp()
+const qs = require('qs')
 
 Page({
   data: {
+    isLogin: app.globalData.isLogin,
     goodId: '',
     show: false,
     goodsInfo: {}
   },
   onLoad(options) {
+    this._init(options);
+    app.globalEvent.on('loginSuccess', () => {
+      this.setData({
+        isLogin: app.globalData.isLogin
+      })
+    })
+  },
+  _init(options) {
     let goodId = JSON.parse(options.goodId);
     this.setData({
       goodId
@@ -109,14 +119,55 @@ Page({
   onClose() {
     this.setData({ show: false });
   },
+  getCheckedSku() {
+    const { goodsInfo, goodId } = this.data
+    let sku = goodsInfo && goodsInfo.sku || []
+    let skuMapKey = ''
+    sku.map((item, key) => {
+      if(!!item.checked) {
+        let models = item.models || []
+        models.map(model => {
+          if(!!model.checked) {
+            let curKey = `${item.id}:${model.skuId}`
+            if(key === 0) {
+              skuMapKey = curKey
+            } else {
+              skuMapKey = `${skuMapKey}|${curKey}`
+            }
+          }
+        })
+      }
+    })
+    let skuMap = goodsInfo && goodsInfo.skuMap || {}
+    let checkedSkuMapItem = skuMap[skuMapKey] || {}
+    console.log('goodsInfo', goodsInfo)
+    let num = 1 // 目前是写死的一个
+    return {
+      totalFee: checkedSkuMapItem.price * num || 0,
+      skuInfo: skuMapKey,
+      goodId: goodId,
+      goodInfoBrief: {
+        num: num,
+        price: checkedSkuMapItem.price,
+        desc: goodsInfo.goods_desc,
+        title: goodsInfo.goods_name,
+        thumb: goodsInfo.info && goodsInfo.info.content && goodsInfo.info.content.carousels && goodsInfo.info.content.carousels[0]
+      }
+    }
+  },
   // 跳转确认订单
   handleBuy() {
-    const { goodId } = this.data
-    if(goodId) {
+    const info = this.getCheckedSku()
+    if(info && info.goodId && info.skuInfo) {
+      console.log('info', info)
+      const urlParmas = qs.stringify(info)
       wx.navigateTo({
-        url: `/pages/order/index?goodId=${goodId}`,
+        url: `/pages/order/index?${urlParmas}`,
       })
       this.onClose()
+    } else {
+      console.log('数据有无')
     }
+
   },
 })
