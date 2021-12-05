@@ -57,8 +57,23 @@ function _buildXml(obj) {
   return xml;
 }
 
+function _parseXml(xml) {
+  return new Promise((resolve, reject) => {
+    let parser = new xml2js.Parser({
+      trim: true,
+      explicitArray: false
+    });
+    parser.parseString(xml, (err, result) => {
+      //console.dir(result);
+      if (err) reject(err);
+      else resolve(result.xml);
+    });
+  });
+}
+
 module.exports = {
   get_spu_no,
   upload2Cdn,
-  _buildXml
+  _buildXml,
+  _parseXml
 }

@@ -7,7 +7,7 @@ const short = require('short-uuid');
 // 微信支付相关
 const wxpay = require('../lib/pay');
 const config = require('../config/key-config');
-const { _buildXml } = require('../lib/utils')
+const { _buildXml, _parseXml } = require('../lib/utils')
 appRouter.post('/create-order', async ctx => {
   let {
     openId,
@@ -137,8 +137,10 @@ appRouter.all('/pay_notify', async (ctx) => {
   console.log('获取到接口..', ctx.request.query)
   try {
     console.log('获取到接口11..', ctx.request.body)
+
+    console.log('获取到接口1..', raw)
     let raw = ctx.request.body;
-    let retobj = JSON.parse(raw);
+    let retobj = await _parseXml(raw)
     console.log('获取到接口2..', retobj)
     if(retobj) {
       console.log('----------', retobj)
@@ -147,7 +149,7 @@ appRouter.all('/pay_notify', async (ctx) => {
     let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
     // 失败
     // _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
-    console.log('xml---', xml);
+    console.log('xml', xml);
   } catch (error) {
     console.log('error----', error)
   }
