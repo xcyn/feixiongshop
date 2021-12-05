@@ -137,6 +137,7 @@ appRouter.get('/get-orders', async(ctx, next) => {
 appRouter.all('/pay_notify', async (ctx) => {
   console.log('获取到接口..', ctx.request.query)
   try {
+    console.log('获取到接口11..', ctx.req)
     let raw = await getRawBody(ctx.req, {
         encoding: 'utf-8'
     });
