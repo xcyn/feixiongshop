@@ -7,7 +7,9 @@ const short = require('short-uuid');
 // 微信支付相关
 const wxpay = require('../lib/pay');
 const config = require('../config/key-config');
-const { _buildXml, _parseXml } = require('../lib/utils')
+const { _buildXml, _parseXml } = require('../lib/utils');
+
+// 创建订单
 appRouter.post('/create-order', async ctx => {
   let {
     openId,
@@ -87,6 +89,30 @@ appRouter.post('/create-order', async ctx => {
   }
 })
 
+// 取消订单
+appRouter.post('/cancel-order', async ctx => {
+  let {
+    userId,
+    outTradeNo,
+   } = ctx.request.body
+   if(!userId || !outTradeNo) {
+      throw new Error('参数有误')
+  }
+  let orderRes = await ctx.state.orm.db(database).table('order').update({
+    data: {
+      payState: 2,
+    },
+    where: {
+      outTradeNo
+    }
+  })
+
+  ctx.state.res({
+    data: orderRes
+  })
+
+})
+
 // 获取订单
 appRouter.get('/get-orders', async(ctx, next) => {
   let {
@@ -134,52 +160,109 @@ appRouter.get('/get-orders', async(ctx, next) => {
 
 // 微信支付回调接口
 appRouter.all('/pay_notify', async (ctx) => {
-  console.log('获取到接口..', ctx.request.query)
+  let isTest = ctx.request.query.test
   try {
-    console.log('获取到接口11..', ctx.request.body)
-
     let raw = ctx.request.body;
-
-    console.log('获取到接口1..', raw)
-
+    if(isTest) {
+      raw = isTest
+    }
+    console.log('获取到接口...', ctx.request.body)
     let retobj = await _parseXml(raw)
-    console.log('获取到接口2..', retobj)
     if(retobj) {
-      console.log('----------', retobj)
+      // 商户单号
+      let outTradeNo = retobj.out_trade_no
+      let resultCode = retobj.result_code
+      // 交易单号
+      let transactionId = retobj.transaction_id
+      let payState = 0
+      if (resultCode === 'SUCCESS'){
+        payState = 1
+      }else{
+        payState = 2
+      }
+      let orderRes = await ctx.state.orm.db(database).table('order').update({
+        data: {
+          payState,
+          transactionId
+        },
+        where: {
+          outTradeNo
+        }
+      })
+      console.log('订单状态更新成功:', orderRes)
     }
     // 成功
     let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
-    // 失败
-    // _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
-    console.log('xml', xml);
+    ctx.body = xml;
   } catch (error) {
-    console.log('error----', error)
+    console.log('支付回调接收失败:', error)
+    // 失败
+    let xml = _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
+    ctx.body = xml;
   }
-
 })
 
 // 微信退款接口
 appRouter.get('/pay_refund', async (ctx) => {
   let {out_trade_no:out_trade_no} = ctx.request.query
-  console.log('----', out_trade_no)
-  let data = {
+  const sequelize = await ctx.state.orm.db(database).sequelize()
+  // 开启事务
+  let t = await sequelize.transaction()
+  console.log(1)
+  try {
+    const orderModel = await ctx.state.orm.db(database).table('order').getTable('order', sequelize)
+  console.log(2)
+    await orderModel.sync({ force: false }); //创建表
+  console.log(3)
+    let orderRes = await orderModel.findAll({
+      where: {
+        outTradeNo: out_trade_no,
+      }
+    }, {transaction: t})
+    let totalFee =  orderRes[0].totalFee
+    let data = {
       out_trade_no,
       out_refund_no: short().new(),
-      total_fee: 1,
-      refund_fee: 1
-  };
-  // 尝试退款，封装原方法
-  let res = await (()=>{
-    return new Promise((resolve, reject)=>{
-      wxpay.refund(data,(err, result) => {
-        if (err) reject(err)
-        else resolve(result)
-      });
+      total_fee: totalFee,
+      refund_fee: totalFee
+    };
+    // 尝试退款，封装原方法
+    let res = await (()=>{
+      return new Promise((resolve, reject)=>{
+        wxpay.refund(data,(err, result) => {
+          if (err) reject(err)
+          else resolve(result)
+        });
+      })
+    })()
+    // 退款成功，更新订单状态
+    await orderModel.update({
+      payState: 2,
+    },{
+      where: {
+        outTradeNo: out_trade_no,
+      }
+    }, {transaction: t})
+    t.commit();
+    ctx.state.res({
+      data: res
     })
-  })()
-  ctx.state.res({
-    data: res
-  })
+  } catch(err) {
+    t.rollback();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 })
 
 module.exports = appRouter.routes()

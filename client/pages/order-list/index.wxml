@@ -4,10 +4,10 @@
     bind:change="onChange"
    sticky class="order-list-c">
     <van-tab title="全部">
-      <order-item item='{{item}}'  wx:for="{{list}}" wx:key="id"/>
+      <order-item bind:parentEvent="handleClose" item='{{item}}'  wx:for="{{list}}" wx:key="id"/>
     </van-tab>
     <van-tab title="待支付">
-      <order-item item='{{item}}' wx:for="{{list}}" wx:key="id"/>
+      <order-item bind:parentEvent="handleClose" item='{{item}}' wx:for="{{list}}" wx:key="id"/>
     </van-tab>
     <van-tab title="已支付">
       <order-item item='{{item}}'  wx:for="{{list}}" wx:key="id"/>

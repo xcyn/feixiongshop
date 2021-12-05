@@ -10,7 +10,8 @@
         thumb="{{thumb}}"
       >
       <view slot="footer">
-        ¥{{total}}.00
+        <span class="order-total">¥{{total}}.00</span>
+        <van-button wx:if="{{showCloseBtn}}" style="margin-left: 10px;" size="mini" data-outTradeNo="{{outTradeNo}}" bindtap="handleClose">取消订单</van-button>
       </view>
       </van-card>
       <view class="order-item-date">

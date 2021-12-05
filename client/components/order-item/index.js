@@ -36,7 +36,11 @@ Component({
           let price = goodInfoBrief && goodInfoBrief.price || 0
           let num = goodInfoBrief && goodInfoBrief.num || 0
           let total = price * num
+          let showCloseBtn = item.payState === 0
+          let outTradeNo = item.outTradeNo
           this.setData({
+            outTradeNo: outTradeNo,
+            showCloseBtn:showCloseBtn,
             title: title,
             desc: desc,
             num: num,
@@ -70,6 +74,19 @@ Component({
      * 组件的方法列表
      */
     methods: {
+      // 取消订单
+      handleClose(e) {
+        const { outtradeno } = e.currentTarget.dataset
+        wx.showModal({
+          title: '提示',
+          content: '确定要取消订单?',
+          success:  (sm) => {
+            this.triggerEvent('parentEvent', {
+              outTradeNo: outtradeno
+            })
+          }
+        })
+      },
       onChange(event) {
       },
       // 是否是当前页面？

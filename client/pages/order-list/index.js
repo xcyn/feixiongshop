@@ -10,6 +10,38 @@ Page({
   // 事件处理函数
   bindViewTap() {
   },
+  async handleClose(event) {
+    let outTradeNo = event.detail.outTradeNo
+    if(outTradeNo) {
+      const userInfo = app.globalData.userInfo
+      const res = await app.request({
+        url: '/goods-c/cancel-order',
+        method: 'post',
+        data:{ 
+          userId: userInfo.id,
+          outTradeNo: outTradeNo
+         }
+      })
+      if(res && res.errno === 0) {
+        app.wxp.showToast({
+          title: '取消订单成功'
+        })
+        const { status } = this.data
+        this.getOrderStatus(status)
+      }else {
+        app.wxp.showToast({
+          title: '取消订单失败',
+          icon:'error'
+        })
+      }
+    } else {
+      app.wxp.showToast({
+        title: '操作有误',
+        icon:'error'
+      })
+    }
+    console.log('关闭订单', event.detail)
+  },
   async getOrderStatus(status = 'all') {
     const userInfo = app.globalData.userInfo
     const res = await app.request({

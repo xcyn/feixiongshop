@@ -21,7 +21,7 @@ module.exports = {
       type:Sequelize.STRING(50),
       allowNull:true //允许为空
     },
-    payState:{// 支付订单的状态，0=未支付，1=已支付，2=取消或其它
+    payState:{// 支付订单的状态，0=未支付，1=已支付，2=取消或其它, 3-已退款
       type:Sequelize.INTEGER,
       defaultValue:0,
       allowNull: false
