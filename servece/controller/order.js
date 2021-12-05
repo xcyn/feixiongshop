@@ -7,6 +7,7 @@ const short = require('short-uuid');
 // 微信支付相关
 const wxpay = require('../lib/pay');
 const config = require('../config/key-config');
+const getRawBody = require( 'raw-body');
 appRouter.post('/create-order', async ctx => {
   let {
     openId,
@@ -131,5 +132,43 @@ appRouter.get('/get-orders', async(ctx, next) => {
   })
 })
 
+// 微信支付回调接口
+appRouter.all('/pay_notify', async (ctx) => {
+  console.log('获取到接口..', ctx.request.query)
+  let raw = await getRawBody(ctx.req, {
+      encoding: 'utf-8'
+  });
+  let retobj = JSON.parse(raw);
+  if(retobj) {
+    console.log('----------', retobj)
+  }
+  ctx.state.res({
+    data: orders
+  })
+})
+
+// 微信退款接口
+appRouter.get('/pay_refund', async (ctx) => {
+  let {out_trade_no:out_trade_no} = ctx.request.query
+  console.log('----', out_trade_no)
+  let data = {
+      out_trade_no,
+      out_refund_no: short().new(),
+      total_fee: 1,
+      refund_fee: 1
+  };
+  // 尝试退款，封装原方法
+  let res = await (()=>{
+    return new Promise((resolve, reject)=>{
+      wxpay.refund(data,(err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      });
+    })
+  })()
+  ctx.state.res({
+    data: res
+  })
+})
 
 module.exports = appRouter.routes()
