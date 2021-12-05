@@ -133,19 +133,12 @@ appRouter.get('/get-orders', async(ctx, next) => {
 })
 
 // 微信支付回调接口
-appRouter.all('/pay_notify', async (ctx) => {
-  console.log('获取到接口..', ctx.request.query)
-  let raw = await getRawBody(ctx.req, {
-      encoding: 'utf-8'
-  });
-  let retobj = JSON.parse(raw);
-  if(retobj) {
-    console.log('----------', retobj)
-  }
-  ctx.state.res({
-    data: orders
-  })
-})
+appRouter.all('/pay_notify', wxpay.useWXCallback((msg, req, res, next) => {
+  console.log('msg', msg)
+  console.log('req', req)
+  console.log('res', res)
+  console.log('next', next)
+}))
 
 // 微信退款接口
 appRouter.get('/pay_refund', async (ctx) => {
