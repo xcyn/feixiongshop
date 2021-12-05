@@ -2,3 +2,4 @@ node_modules/
 logs/
 config/key-config.js
 config/upload-config.js
+config/
