@@ -137,16 +137,16 @@ appRouter.get('/get-orders', async(ctx, next) => {
 appRouter.all('/pay_notify', async (ctx) => {
   console.log('获取到接口..', ctx.request.query)
   try {
-    console.log('获取到接口11..', ctx.request)
-    let raw = await getRawBody(ctx.req, {
-        encoding: 'utf-8'
-    });
-    console.log('获取到接口1..', raw)
-    let retobj = JSON.parse(raw);
-    console.log('获取到接口2..', retobj)
-    if(retobj) {
-      console.log('----------', retobj)
-    }
+    console.log('获取到接口11..', ctx.request.body)
+    // let raw = await getRawBody(ctx.req, {
+    //     encoding: 'utf-8'
+    // });
+    // console.log('获取到接口1..', raw)
+    // let retobj = JSON.parse(raw);
+    // console.log('获取到接口2..', retobj)
+    // if(retobj) {
+    //   console.log('----------', retobj)
+    // }
     // 成功
     let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
     // 失败
