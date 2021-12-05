@@ -138,8 +138,10 @@ appRouter.all('/pay_notify', async (ctx) => {
   try {
     console.log('获取到接口11..', ctx.request.body)
 
-    console.log('获取到接口1..', raw)
     let raw = ctx.request.body;
+
+    console.log('获取到接口1..', raw)
+
     let retobj = await _parseXml(raw)
     console.log('获取到接口2..', retobj)
     if(retobj) {

@@ -64,7 +64,7 @@ function _parseXml(xml) {
       explicitArray: false
     });
     parser.parseString(xml, (err, result) => {
-      //console.dir(result);
+      console.dir(result);
       if (err) reject(err);
       else resolve(result.xml);
     });
