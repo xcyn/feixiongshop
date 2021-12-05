@@ -8,6 +8,7 @@ const short = require('short-uuid');
 const wxpay = require('../lib/pay');
 const config = require('../config/key-config');
 const getRawBody = require( 'raw-body');
+const { _buildXml } = require('../lib/utils')
 appRouter.post('/create-order', async ctx => {
   let {
     openId,
@@ -133,12 +134,28 @@ appRouter.get('/get-orders', async(ctx, next) => {
 })
 
 // 微信支付回调接口
-appRouter.all('/pay_notify', wxpay.useWXCallback((msg, req, res, next) => {
-  console.log('msg', msg)
-  console.log('req', req)
-  console.log('res', res)
-  console.log('next', next)
-}))
+appRouter.all('/pay_notify', async (ctx) => {
+  console.log('获取到接口..', ctx.request.query)
+  try {
+    let raw = await getRawBody(ctx.req, {
+        encoding: 'utf-8'
+    });
+    console.log('获取到接口1..', raw)
+    let retobj = JSON.parse(raw);
+    console.log('获取到接口2..', retobj)
+    if(retobj) {
+      console.log('----------', retobj)
+    }
+    // 成功
+    let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
+    // 失败
+    // _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
+    console.log('xml', xml);
+  } catch (error) {
+    console.log('error----', error)
+  }
+
+})
 
 // 微信退款接口
 appRouter.get('/pay_refund', async (ctx) => {

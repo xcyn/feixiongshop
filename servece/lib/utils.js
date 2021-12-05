@@ -1,6 +1,7 @@
 const dayJs = require('dayjs');
 const fs = require('fs');
 const path = require('path');
+const xml2js = require('xml2js');
 
 function Sx (num) {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(num)
@@ -45,7 +46,19 @@ async function upload2Cdn({
   return result
 }
 
+function _buildXml(obj) {
+  let builder = new xml2js.Builder({
+    allowSurrogateChars: true
+  });
+  let xml = builder.buildObject({
+    xml: obj
+  });
+  console.dir (xml);
+  return xml;
+}
+
 module.exports = {
   get_spu_no,
-  upload2Cdn
+  upload2Cdn,
+  _buildXml
 }
