@@ -3,6 +3,8 @@ let Router = require('koa-router');
 const { dbConfig } = require('../config/index');
 let database = dbConfig.database;
 let appRouter = new Router();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op
 
 // 获取地址
 appRouter.get('/select-address-item', async(ctx, next) => {
@@ -34,7 +36,6 @@ appRouter.post('/create-address', async(ctx, next) => {
     telNumber,
     region,
     detailInfo,
-    isDefault
    } = ctx.request.body
    if(!region || !region.provCode || !region.cityCode || !region.counCode) {
     throw new Error('创建地址失败，参数有误')
@@ -46,7 +47,7 @@ appRouter.post('/create-address', async(ctx, next) => {
       telNumber,
       region,
       detailInfo,
-      isDefault
+      isDefault: 0
     }
   })
   ctx.state.res({
@@ -204,6 +205,50 @@ appRouter.get('/select-user-address', async(ctx, next) => {
   })
   ctx.state.res({
     data: address
+  })
+})
+
+// 查询所有地址
+appRouter.get('/select-all-address', async(ctx, next) => {
+  let allAddrs = await ctx.state.orm.db(database).table('address-code').select({
+    where: {
+      id: {
+        [Op.gt]: 0
+      }
+    }
+  })
+  let province_list = {}
+  let city_list = {}
+  let county_list = {}
+  for(let i = 0; i< allAddrs.length; i++) {
+    let item = allAddrs[i]
+    if(item) {
+      if(item.provCode && !province_list[item.provCode]) {
+        province_list[item.provCode] = item.provName
+      }
+      if(item.cityCode && !city_list[item.cityCode]) {
+        city_list[item.cityCode] = item.cityName
+      }
+      // if(item.counCode && !county_list[item.counCode]) {
+      //   county_list[item.counCode] = item.counName
+      // }
+      // 支持前端组件处理
+      if(!item.counCode) {
+        county_list[`${item.cityCode}${i}`] = item.cityName
+      } else {
+        if(!county_list[item.counCode]) {
+          county_list[item.counCode] = item.counName
+        }
+      }
+    }
+  }
+  const areaList = {
+    province_list,
+    city_list,
+    county_list,
+  }
+  ctx.state.res({
+    data: areaList
   })
 })
 

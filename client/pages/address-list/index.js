@@ -24,6 +24,25 @@ Page({
     let uiList = []
     if(res.errno === 0) {
       let list = res.data || []
+      // 如果只有一条数据并且不是默认，那么默认变成defalut
+      if(list.length === 1) {
+        let data = list[0]
+        if(!data.isDefault) {
+          const res2 = await app.request({
+            url: '/goods-c/update-default-address',
+            method: 'post',
+            data:{ 
+              userId: userInfo.id,
+              telNumber: data.telNumber,
+              id: data.id,
+             }
+          })
+          if(res2 && res2.errno === 0) {
+            this.getAddressList()
+          }
+          return
+        }
+      }
       for(let i = 0; i < list.length; i++) {
         let item = list[i];
         const {
@@ -86,7 +105,12 @@ Page({
     })
     if(res && res.errno === 0) {
       wx.navigateBack({
-        delta: 1
+        delta: 1,
+        success: function () {
+          let page = getCurrentPages().pop();
+          if (page == undefined || page == null) return;
+          page.onLoad();
+        }
       }) 
     }
   }

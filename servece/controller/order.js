@@ -86,40 +86,48 @@ appRouter.post('/create-order', async ctx => {
   }
 })
 
-// 创建地址
-appRouter.post('/create-order2', async(ctx, next) => {
-  let { 
-    userId,
-    outTradeNo,
-    transactionId,
-    payState,
-    totalFee,
-    addressId,
-    addressDesc,
-    goodsCartsIds,
-    goodsNameDesc,
-   } = ctx.request.body
-   if(!userId || !outTradeNo ||
-    (!payState && typeof payState != 'number') || !totalFee || !addressId ||
-    !addressDesc || !goodsCartsIds || !goodsNameDesc
-    ) {
-      throw new Error('参数有误')
-   }
-  let order = await ctx.state.orm.db(database).table('order').findOrCreate({
-    where: {
+// 获取订单
+appRouter.get('/get-orders', async(ctx, next) => {
+  let {
+    status,
+    userId
+   } = ctx.query
+  //  订单状态map
+  let statusMap = {
+    'all': 'isAll',
+    'unPay': 0,
+    'isPay': 1,
+    'cancel': 2,
+  }
+  if(!status || !userId) {
+    throw new Error('状态不对')
+  }
+  let statusItem = statusMap[status]
+  if(!statusMap) {
+    throw new Error('参数错误')
+  }
+  let isAll = statusItem === 'isAll'
+  let orders = []
+  if(isAll) {
+    orders = await ctx.state.orm.db(database).table('order').select({
       userId,
-      outTradeNo,
-      transactionId,
-      payState,
-      totalFee,
-      addressId,
-      addressDesc,
-      goodsCartsIds,
-      goodsNameDesc,
-    }
-  })
+      options: {
+        'order': [['id', 'DESC']]
+      }
+    })
+  } else {
+    orders = await ctx.state.orm.db(database).table('order').select({
+      where: {
+        userId,
+        payState: statusItem
+      },
+      options: {
+        order: [['id', 'DESC']]
+      }
+    })
+  }  
   ctx.state.res({
-    data: order && order[0] || null
+    data: orders
   })
 })
 

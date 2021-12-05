@@ -11,11 +11,17 @@ Page({
   bindViewTap() {
   },
   onLoad() {
+    this._init()
     app.globalEvent.on('loginSuccess', () => {
-      this.setData({
-        isLogin: app.globalData.isLogin,
-        userInfo: app.globalData.userInfo
-      })
+      this._init()
+    })
+  },
+  _init() {
+    const isLogin = app.globalData.isLogin
+    const userInfo = app.globalData.userInfo
+    this.setData({
+      isLogin: isLogin,
+      userInfo: userInfo
     })
   },
   onUnload() {
@@ -28,9 +34,24 @@ Page({
   handleCloseAbout() {
     this.setData({ showabout: false });
   },
-  handleGoOrderList() {
-    wx.navigateTo({
-      url: `/pages/order-list/index`,
+  handleGoOrderList(ev) {
+    const status = ev.currentTarget.dataset.id
+    if(status) {
+      wx.navigateTo({
+        url: `/pages/order-list/index?status=${status}`,
+      })
+    } else {
+      app.wxp.showToast({
+        title: '数据有误',
+        icon:'error'
+      })
+    }
+  },
+  // 售后
+  handleGoSale() {
+    app.wxp.showToast({
+      title: '暂未开放....',
+      icon:'error'
     })
   },
   handleGoAddress() {

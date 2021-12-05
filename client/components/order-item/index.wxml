@@ -1,20 +1,20 @@
   <!-- 底部footer -->
   <view>
     <view class="order-item-title">
-      <van-cell title="10212-01" value="待发货" />
+      <van-cell title="{{title}}" value="{{status}}" />
       <van-card
-        num="2"
-        price="2.00"
-        desc="描述信息"
-        title="商品标题"
-        thumb="/images/index/banner1.jpeg"
+        num="{{num}}"
+        price="{{price}}"
+        desc="{{desc}}"
+        title="{{title}}"
+        thumb="{{thumb}}"
       >
       <view slot="footer">
-        ¥4.00
+        ¥{{total}}.00
       </view>
       </van-card>
       <view class="order-item-date">
-        <van-cell title="2021-06-13 80:21:05" />
+        <van-cell title="{{time}}" />
       </view>
     </view>
   </view>

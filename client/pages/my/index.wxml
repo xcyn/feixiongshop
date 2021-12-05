@@ -13,25 +13,25 @@
           <span>{{userInfo.nickName}}</span>
         </view>
         <view class="order-status-c">
-          <view class="img" bind:tap="handleGoOrderList" >
+          <view class="img" data-id="unPay" bind:tap="handleGoOrderList" >
             <image src="/images/my/topay.png"></image>
             <view>
-              待付款
+              待支付
             </view>
           </view>
-          <view class="img" bind:tap="handleGoOrderList" >
+          <view class="img" data-id="isPay" bind:tap="handleGoOrderList" >
             <image src="/images/my/fahuo.png"></image>
             <view>
-              待发货
+              已支付
             </view>
           </view>
-          <view class="img" bind:tap="handleGoOrderList" >
+          <view class="img" data-id="cancel" bind:tap="handleGoOrderList" >
             <image src="/images/my/shouhuo.png"></image>
             <view>
-              待收货
+              已取消
             </view>
           </view>
-          <view class="img" bind:tap="handleGoOrderList" >
+          <view class="img" bind:tap="handleGoSale" >
             <image src="/images/my/shouhou.png"></image>
             <view>
               售后
@@ -57,11 +57,6 @@
       <van-cell-group>
         <van-cell title="收货地址" is-link bind:tap="handleGoAddress" />
         <van-cell bindtap="handleAboutAs" title="关于我们" is-link border="{{ false }}"/>
-      </van-cell-group>
-    </view>
-    <view class="login-info">
-      <van-cell-group>
-        <van-cell title="退出登陆" is-link />
       </van-cell-group>
     </view>
     <view class="yanfa-info">

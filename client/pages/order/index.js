@@ -8,18 +8,14 @@ Page({
     isLogin: null,
     userInfo: null,
   },
+  onShow() {
+    this.getUserDefaultAddress()
+  },
   onLoad(options) {
     const app = getApp()
     const isLogin = app.globalData.isLogin
     const userInfo = app.globalData.userInfo
     this.getUserDefaultAddress()
-    // 生成购物车数据 (目前只有详情页过来的数据)
-    let goodsCartsIds = [
-      {
-        goodId: options.goodId,
-        skuInfo: decodeURIComponent(qs.parse(options).skuInfo || '').split('|')
-      }
-    ]
     let goodInfoBriefs = []
     let goodInfoBrief = qs.parse(options).goodInfoBrief
     goodInfoBrief.desc = decodeURIComponent(goodInfoBrief.desc)
@@ -28,6 +24,14 @@ Page({
     if(goodInfoBrief) {
       goodInfoBriefs.push(goodInfoBrief)
     }
+    // 生成购物车数据 (目前只有详情页过来的数据)
+    let goodsCartsIds = [
+      {
+        goodId: options.goodId,
+        skuInfo: decodeURIComponent(qs.parse(options).skuInfo || '').split('|'),
+        goodInfoBrief,
+      }
+    ]
     this.setData({
       totalFee: options.totalFee,
       goodInfoBriefs,
@@ -67,7 +71,8 @@ Page({
     let addressDesc = '地址详情备注' //先写死，后面再开发
     if(!address) {
       app.wxp.showToast({
-        title: '请选择地点',
+        title: '请选择地点...',
+        icon:'error'
       })
       return
     }
@@ -80,6 +85,13 @@ Page({
     console.log('下单数据:addressDesc', addressDesc)
     console.log('下单数据:goodsCartsIds', goodsCartsIds)
     console.log('下单数据:goodsNameDesc', goodsNameDesc)
+    if(!addressId) {
+      app.wxp.showToast({
+        title: '请选择地址',
+        icon:'error'
+      })
+      return
+    }
     Dialog.confirm({
       title: '确认下单？',
       message: `一共支付金额为${totalFee}元`,
@@ -119,6 +131,7 @@ Page({
             } else {
               app.wxp.showToast({
                 title: '支付失败',
+                icon:'error'
               })
               // 跳转未支付列表
               wx.redirectTo({

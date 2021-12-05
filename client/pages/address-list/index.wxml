@@ -3,7 +3,7 @@
     <van-radio-group value="{{ selectId }}" bind:change="handleSelectAddress">
       <van-cell wx:for="{{addressList}}" wx:key="id" title="{{item.title}}" label="{{item.detailInfo}}">
         <van-radio name="{{item.id}}"></van-radio>
-        <van-icon slot="right-icon" name="edit" class="custom-icon" />
+        <!-- <van-icon slot="right-icon" name="edit" class="custom-icon" /> -->
       </van-cell>
     </van-radio-group>
   </van-cell-group>

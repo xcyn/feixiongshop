@@ -26,7 +26,7 @@
 }
 
 .yanfa-info {
-  padding-top: 310rpx;
+  padding-top: 380rpx;
   text-align: center;
   font-size: 18rpx;
   border: 0 none;

@@ -127,7 +127,7 @@ module.exports = async function Orm (ctx, next) {
      * @param  {Array} options.attributes 返回字段配置
      * @return {this}
      */
-    async select ({ where, limit, offset, attributes, include }) {
+    async select ({ where, limit, offset, attributes, include, options={} }) {
       const sequelize = await mysqlConnect(this.__config__)
       try {
         const Table = getTable(this.__config__.table, sequelize)
@@ -136,13 +136,15 @@ module.exports = async function Orm (ctx, next) {
         await Table.sync({ force: false }); //创建表
         // http://docs.sequelizejs.com/manual/models-usage.html
         // http://docs.sequelizejs.com/manual/querying.html
-        const res = await Table.findAll({
+        let params = {
           where,
           limit,
           offset,
           attributes,
-          include
-        })
+          include,
+          ...options
+        }
+        const res = await Table.findAll(params)
         return res
       } catch (error) {
         console.log('select命令出错:', error)

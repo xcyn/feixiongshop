@@ -1,27 +1,20 @@
 <!--index.wxml-->
 <view class="container">
-  <van-tabs sticky class="order-list-c">
+  <van-tabs active="{{ active }}"
+    bind:change="onChange"
+   sticky class="order-list-c">
     <van-tab title="全部">
-      <order-item/>
-      <order-item/>
-      <order-item/>
-      <order-item/>
+      <order-item item='{{item}}'  wx:for="{{list}}" wx:key="id"/>
     </van-tab>
     <van-tab title="待支付">
-      <order-item/>
-      <order-item/>
+      <order-item item='{{item}}' wx:for="{{list}}" wx:key="id"/>
     </van-tab>
-    <van-tab title="待发货">
-      <order-item/>
-    </van-tab>
-    <van-tab title="待收货">
-      <order-item/>
-    </van-tab>
-    <van-tab title="已完成">
-      <order-item/>
+    <van-tab title="已支付">
+      <order-item item='{{item}}'  wx:for="{{list}}" wx:key="id"/>
     </van-tab>
     <van-tab title="已取消">
-      <order-item/>
+      <order-item item='{{item}}'  wx:for="{{list}}" wx:key="id"/>
     </van-tab>
   </van-tabs>
+  <van-empty wx:if="{{!list || !list.length}}" description="暂无数据" />
 </view>
