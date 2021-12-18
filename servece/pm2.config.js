@@ -18,8 +18,8 @@ module.exports = {
         "out_file": isDev ? "log-dev/out_file.log" : "log-pro/out_file.log",
         "error_file": isDev ? "log-dev/error_file.log" : "log-pro/error_file.log",
         combine_logs: true,
-        instances: 1,
-        max_memory_restart: '300M'
+        instances: 'max',
+        max_memory_restart: '500M'
       }
   ]
 }
