@@ -166,14 +166,21 @@ appRouter.all('/pay_notify', async (ctx) => {
     if(isTest) {
       raw = isTest
     }
-    console.log('获取到接口...', ctx.request.body)
+    console.log('serve-log:微信支付回调接口:入参request.body:', ctx.request.body)
     let retobj = await _parseXml(raw)
+    console.log('serve-log:微信支付回调接口: _parseXml成功:', retobj)
     if(retobj) {
       // 商户单号
       let outTradeNo = retobj.out_trade_no
       let resultCode = retobj.result_code
       // 交易单号
       let transactionId = retobj.transaction_id
+      console.log(`serve-log:微信支付回调接口: 
+        retobj相关参数:
+        outTradeNo-${outTradeNo},
+        resultCode-${resultCode},
+        transactionId-${transactionId}
+      `)
       let payState = 0
       if (resultCode === 'SUCCESS'){
         payState = 1
@@ -189,13 +196,19 @@ appRouter.all('/pay_notify', async (ctx) => {
           outTradeNo
         }
       })
-      console.log('订单状态更新成功:', orderRes)
+      console.log(`serve-log:微信支付回调接口: 
+        订单状态更新成功:
+        orderRes-${orderRes}
+      `)
     }
     // 成功
     let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
     ctx.body = xml;
   } catch (error) {
-    console.log('支付回调接收失败:', error)
+    console.log(`serve-log:微信支付回调接口: 
+      支付回调接收失败:
+      error-${error}
+    `)
     // 失败
     let xml = _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
     ctx.body = xml;
