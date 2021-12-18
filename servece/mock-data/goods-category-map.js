@@ -31,7 +31,7 @@ async function createTable() {
       let category = categoryMaps[i]
       if(category) {
         const res = await request.post({
-          url: 'http://localhost:3099/goods/create-goods-category-map', 
+          url: 'http://localhost:3299/goods/create-goods-category-map', 
           data: category
         })
         resArr.push(res)

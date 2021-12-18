@@ -52,7 +52,7 @@ async function createTable() {
       let good = goods[i]
       if(good) {
         const res = await request.post({
-          url: 'http://localhost:3099/goods/create-goods', 
+          url: 'http://localhost:3299/goods/create-goods', 
           data: good
         })
         resArr.push(res)

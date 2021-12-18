@@ -47,6 +47,6 @@ app.use(serve({rootDir: 'public', rootPath: '/public'}))
 app.use(appRoute.routes())
 app.use(appRoute.allowedMethods());
  
-app.listen(3099,() => {
-     console.log('服务开始运行，端口为3099')
+app.listen(3299,() => {
+     console.log('服务开始运行，端口为3299')
 });

@@ -20,7 +20,7 @@ async function createTable() {
       let category = categorys[i]
       if(category) {
         const res = await request.post({
-          url: 'http://localhost:3099/goods/create-goods-category', 
+          url: 'http://localhost:3299/goods/create-goods-category', 
           data: category
         })
         resArr.push(res)

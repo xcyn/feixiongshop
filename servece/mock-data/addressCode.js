@@ -53,7 +53,7 @@ async function createTable() {
           data.counName = ''
           data.counCode = ''
           const res = await request.post({
-            url: 'http://localhost:3099/goods/create-address-code', 
+            url: 'http://localhost:3299/goods/create-address-code', 
             data: data
           })
           resArr.push(res)
@@ -71,7 +71,7 @@ async function createTable() {
             data.counCode = ''
           }
           const res = await request.post({
-            url: 'http://localhost:3099/goods/create-address-code', 
+            url: 'http://localhost:3299/goods/create-address-code', 
             data: data
           })
           resArr.push(res)

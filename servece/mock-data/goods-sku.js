@@ -52,7 +52,7 @@ async function createTable() {
       let sku = skus[i]
       if(sku) {
         const res = await request.post({
-          url: 'http://localhost:3099/goods/create-goods-sku', 
+          url: 'http://localhost:3299/goods/create-goods-sku', 
           data: sku
         })
         resArr.push(res)

@@ -22,7 +22,7 @@ async function createTable() {
       let goodVal = goodsAttr[i]
       if(goodVal) {
         const res = await request.post({
-          url: 'http://localhost:3099/goods/create-skuBreed', 
+          url: 'http://localhost:3299/goods/create-skuBreed', 
           data: goodVal
         })
         resArr.push(res)

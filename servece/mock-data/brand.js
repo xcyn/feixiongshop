@@ -13,7 +13,7 @@ async function createTable() {
       let brand = brands[i]
       if(brand) {
         const res = await request.post({
-          url: 'http://localhost:3099/goods/create-brand', 
+          url: 'http://localhost:3299/goods/create-brand', 
           data: brand
         })
         resArr.push(res)

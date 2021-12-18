@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://www.feixiongwang.cn:3099'
+const API_BASE_URL = 'http://www.feixiongwang.cn:3299'
 const request = ({
   url, method, header={}, data
 }) => {
