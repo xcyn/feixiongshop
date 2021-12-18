@@ -3,3 +3,6 @@ logs/
 config/key-config.js
 config/upload-config.js
 config/
+config/config.js
+log-dev/
+log-pro/

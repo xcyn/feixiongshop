@@ -19,37 +19,13 @@ Component({
     },
     // 组件数据字段监听器，用于监听 properties 和 data 的变化
     observers: {
-
+      'item': function(item) {
+        this._update()
+        console.log('observers-item', item)
+      }
     },
     lifetimes: {
         attached: function() {
-          const item = this.properties.item
-          let statusMap = {
-            0: '待支付',
-            1: '已支付',
-            2: '取消',
-          }
-          const goodInfoBrief = item && item.goodsCartsIds && item.goodsCartsIds[0] && item.goodsCartsIds[0].goodInfoBrief
-          let title = goodInfoBrief && goodInfoBrief.title || ''
-          let desc = goodInfoBrief && goodInfoBrief.desc || ''
-          let thumb = goodInfoBrief && goodInfoBrief.thumb || ''
-          let price = goodInfoBrief && goodInfoBrief.price || 0
-          let num = goodInfoBrief && goodInfoBrief.num || 0
-          let total = price * num
-          let showCloseBtn = item.payState === 0
-          let outTradeNo = item.outTradeNo
-          this.setData({
-            outTradeNo: outTradeNo,
-            showCloseBtn:showCloseBtn,
-            title: title,
-            desc: desc,
-            num: num,
-            thumb: thumb,
-            price: price,
-            total: total,
-            status: item && statusMap[item.payState] || '未知',
-            time: item && app.util.formatTime(new Date(item.createdAt))
-          })
         },
         moved: function () {
           console.log('moved')
@@ -74,6 +50,35 @@ Component({
      * 组件的方法列表
      */
     methods: {
+      _update() {
+        const item = this.properties.item
+        let statusMap = {
+          0: '待支付',
+          1: '已支付',
+          2: '取消',
+        }
+        const goodInfoBrief = item && item.goodsCartsIds && item.goodsCartsIds[0] && item.goodsCartsIds[0].goodInfoBrief
+        let title = goodInfoBrief && goodInfoBrief.title || ''
+        let desc = goodInfoBrief && goodInfoBrief.desc || ''
+        let thumb = goodInfoBrief && goodInfoBrief.thumb || ''
+        let price = goodInfoBrief && goodInfoBrief.price || 0
+        let num = goodInfoBrief && goodInfoBrief.num || 0
+        let total = price * num
+        let showCloseBtn = item.payState === 0
+        let outTradeNo = item.outTradeNo
+        this.setData({
+          outTradeNo: outTradeNo,
+          showCloseBtn:showCloseBtn,
+          title: title,
+          desc: desc,
+          num: num,
+          thumb: thumb,
+          price: price,
+          total: total,
+          status: item && statusMap[item.payState] || '未知',
+          time: item && app.util.formatTime(new Date(item.createdAt))
+        })
+      },
       // 取消订单
       handleClose(e) {
         const { outtradeno } = e.currentTarget.dataset

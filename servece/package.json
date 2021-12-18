@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "cross-env ENV=development nodemon ./index.js",
-    "createDb": "npx sequelize db:create --env=development"
+    "pro": "cross-env ENV=production nodemon ./index.js",
+    "createDb": "npx sequelize db:create --env=development",
+    "pm2": "cross-env NODE_ENV=production ENV=production pm2 start pm2.config.js --no-daemon"
   },
   "repository": {
     "type": "git",

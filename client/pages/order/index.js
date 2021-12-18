@@ -140,6 +140,10 @@ Page({
             }
           },
           fail: (err) => {
+            app.wxp.showToast({
+              title: '暂不支付',
+              icon:'error'
+            })
             console.log('err', err)
           }
         })

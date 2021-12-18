@@ -26,7 +26,7 @@ appRouter.post('/create-order', async ctx => {
       throw new Error('参数有误')
   }
   // 为测试方便，所有金额支付数均为1分
-  totalFee = 1
+  totalFee = totalFee * 100
   let payState = 0
   // 依照Order模型接收参数
   let outTradeNo = `${new Date().getFullYear()}${short().new()}`

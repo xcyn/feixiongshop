@@ -162,6 +162,7 @@ appRouter.get('/get-user-default-address', async(ctx, next) => {
       userId
     }
   })
+  console.log(`日志:${userId}获取address数据，结果为: ${address && address[0] && address[0].get()}`);
   if(address && address[0]) {
     address = address[0].get();
     const {
@@ -169,6 +170,7 @@ appRouter.get('/get-user-default-address', async(ctx, next) => {
       counCode,
       provCode
     } = address.region
+    console.log(`日志:${userId}获取addressInfo数据，入参数为: cityCode:${cityCode},counCode:${counCode},provCode:${provCode}`);
     let addressInfo = await ctx.state.orm.db(database).table('address-code').select({
       where: {
         cityCode,
@@ -176,6 +178,7 @@ appRouter.get('/get-user-default-address', async(ctx, next) => {
         provCode
       }
     })
+    console.log(`日志:${userId}获取addressInfo数据，结果为: ${addressInfo && addressInfo[0] && addressInfo[0].get()}`);
     if(addressInfo && addressInfo[0]) {
       addressInfo = addressInfo[0].get()
     } else {

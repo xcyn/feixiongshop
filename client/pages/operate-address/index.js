@@ -123,6 +123,11 @@ Page({
           page.onLoad();
         }
       })
+    } else {
+      app.wxp.showToast({
+        title: '创建地址失败',
+        icon:'error'
+      })
     }
   }
 })

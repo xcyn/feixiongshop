@@ -143,12 +143,12 @@ Page({
     console.log('goodsInfo', goodsInfo)
     let num = 1 // 目前是写死的一个
     return {
-      totalFee: checkedSkuMapItem.price * num || 0,
+      totalFee: (checkedSkuMapItem.price && checkedSkuMapItem.price * num || goodsInfo.start_price) || 0,
       skuInfo: skuMapKey,
       goodId: goodId,
       goodInfoBrief: {
         num: num,
-        price: checkedSkuMapItem.price,
+        price: checkedSkuMapItem.price || goodsInfo.start_price,
         desc: goodsInfo.goods_desc,
         title: goodsInfo.goods_name,
         thumb: goodsInfo.info && goodsInfo.info.content && goodsInfo.info.content.carousels && goodsInfo.info.content.carousels[0]
@@ -158,15 +158,25 @@ Page({
   // 跳转确认订单
   handleBuy() {
     const info = this.getCheckedSku()
+    console.log('info', info)
     if(info && info.goodId && info.skuInfo) {
-      console.log('info', info)
       const urlParmas = qs.stringify(info)
       wx.navigateTo({
         url: `/pages/order/index?${urlParmas}`,
       })
       this.onClose()
     } else {
-      console.log('数据有无')
+      if(info) {
+        const urlParmas = qs.stringify(info)
+        wx.navigateTo({
+          url: `/pages/order/index?${urlParmas}`,
+        })
+      } else {
+        app.wxp.showToast({
+          title: '购买失败,请联系管理员',
+          icon:'error'
+        })
+      }
     }
 
   },
