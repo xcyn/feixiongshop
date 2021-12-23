@@ -37,7 +37,8 @@ app.use(koajwt({ secret: JWT_SECRET}).unless(
                '/ormTest',
                '/addOrmTest',
                '/test',
-               /^\/goods\/*/
+               /^\/goods\/*/,
+               /^\/fxapi\/*/
           ]
      })
 )
