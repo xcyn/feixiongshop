@@ -173,15 +173,6 @@ module.exports = async function Orm (ctx, next) {
  * @return {Sequelize Instance}
  */
 async function mysqlConnect({ name = 'default', host = '127.0.0.1', port = 3306, username = 'root', password = '', database = 'default', }) {
-  console.log(`
-    连接池数据:
-    name:${name},
-    host:${host},
-    port:${port},
-    username:${username},
-    password:${password},
-    database:${database},
-  `)
   if (name in sqlConnectMap) {
     return sqlConnectMap[name]
   }

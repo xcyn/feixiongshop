@@ -135,9 +135,13 @@ appRouter.get('/get-orders', async(ctx, next) => {
   }
   let isAll = statusItem === 'isAll'
   let orders = []
+  console.log('get-orders:userId', userId)
+  console.log('get-orders:isAll', isAll)
   if(isAll) {
     orders = await ctx.state.orm.db(database).table('order').select({
-      userId,
+      where: {
+        userId
+      },
       options: {
         'order': [['id', 'DESC']]
       }
