@@ -32,7 +32,7 @@ Page({
         console.log(res)
         this.setData({
           userInfo: res.userInfo,
-          hasUserInfo: true
+          hasUserInfo: false
         })
       }
     })
