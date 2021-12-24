@@ -17,7 +17,14 @@ Page({
     const userInfo = app.globalData.userInfo
     this.getUserDefaultAddress()
     let goodInfoBriefs = []
-    let goodInfoBrief = qs.parse(options).goodInfoBrief
+    let resloveOptions = qs.parse(options) || {}
+    let goodInfoBrief = {
+      num: resloveOptions.num,
+      price: resloveOptions.price,
+      desc: resloveOptions.desc,
+      title: resloveOptions.title,
+      thumb: resloveOptions.thumb
+    }
     goodInfoBrief.desc = decodeURIComponent(goodInfoBrief.desc)
     goodInfoBrief.title = decodeURIComponent(goodInfoBrief.title)
     goodInfoBrief.thumb = decodeURIComponent(goodInfoBrief.thumb)
