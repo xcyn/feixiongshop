@@ -4,7 +4,7 @@ module.exports = {
       {
           name: "feixiongshop-serve",
           script: "index.js",
-          watch: true,
+          // watch: true,
           ignore_watch: [
               // 从监控目录中排除
               "node_modules",
@@ -19,7 +19,7 @@ module.exports = {
         // "error_file": isDev ? "log-dev/error_file.log" : "log-pro/error_file.log",
         // combine_logs: true,
         instances: 'max',
-        max_memory_restart: '500M'
+        max_memory_restart: '150M'
       }
   ]
 }
