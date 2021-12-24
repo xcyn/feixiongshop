@@ -32,7 +32,7 @@
           </view>
           <view class="good-des">
             <view class="good-des-title">{{item.goods_name}}</view>
-            <view class="good-des-price">¥{{item.start_price}}</view>
+            <view class="good-des-price">¥{{isWxAudit && '免费' || item.start_price}}</view>
             <van-button data-id="{{item.id}}" bindtap="handleGoDetail" type="primary" size="small">查看详情</van-button>
           </view>
         </view>

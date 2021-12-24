@@ -5,11 +5,24 @@ Page({
   data: {
     background: [],
     goods: [],
-    showNoticeDetail: false
+    showNoticeDetail: false,
+    isWxAudit: false
   },
   onLoad() {
+    this.checkWxAudit()
     this.getBannerList()
     this.getrecommandList()
+  },
+  async checkWxAudit() {
+    const res = await app.request({
+      url: '/user/isWxAudit',
+      method: 'get'
+    })
+    if(res.errno === 0) {
+      this.setData({
+        isWxAudit: res.data
+      })
+    }
   },
   getUserProfile(e) {
     // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
@@ -59,6 +72,10 @@ Page({
 
   // 查看商品详情
   handleGoDetail(e) {
+    if(this.data.isWxAudit) {
+      this.handleNoticeDetail()
+      return
+    }
     let id = e.target.dataset.id
     wx.navigateTo({
       url: `/pages/detail/index?goodId=${id}`,
