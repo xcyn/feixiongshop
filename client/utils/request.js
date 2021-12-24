@@ -1,4 +1,7 @@
-const API_BASE_URL = 'http://www.feixiongwang.cn:3299'
+const API_BASE_URL = 'https://www.feixiongwang.cn/fxapi'
+// const API_BASE_URL = 'http://10.2.147.53:3299'
+// const API_BASE_URL = 'http://112.74.86.53:3299'
+// const API_BASE_URL = 'http://192.168.1.177:3299'
 const request = ({
   url, method, header={}, data
 }) => {

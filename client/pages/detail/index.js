@@ -146,13 +146,11 @@ Page({
       totalFee: (checkedSkuMapItem.price && checkedSkuMapItem.price * num || goodsInfo.start_price) || 0,
       skuInfo: skuMapKey,
       goodId: goodId,
-      goodInfoBrief: {
-        num: num,
-        price: checkedSkuMapItem.price || goodsInfo.start_price,
-        desc: goodsInfo.goods_desc,
-        title: goodsInfo.goods_name,
-        thumb: goodsInfo.info && goodsInfo.info.content && goodsInfo.info.content.carousels && goodsInfo.info.content.carousels[0]
-      }
+      num: num,
+      price: checkedSkuMapItem.price || goodsInfo.start_price,
+      desc: goodsInfo.goods_desc,
+      title: goodsInfo.goods_name,
+      thumb: goodsInfo.info && goodsInfo.info.content && goodsInfo.info.content.carousels && goodsInfo.info.content.carousels[0]
     }
   },
   // 跳转确认订单
