@@ -31,14 +31,12 @@ app.use(catchError)
 app.use(koajwt({ secret: JWT_SECRET}).unless(
      {
           path: [
-               '/user/wx-login',
-               '/user/login', 
-               '/user/wexin-login2',
                '/ormTest',
                '/addOrmTest',
                '/test',
                /^\/goods\/*/,
-               /^\/fxapi\/*/
+               /^\/fxapi\/*/,
+               /^\/user\/*/
           ]
      })
 )

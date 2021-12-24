@@ -98,4 +98,11 @@ appRouter.post('/wx-login', async (ctx, next) => {
   })
 })
 
+// 骗微信审核
+appRouter.get('/isWxAudit', async(ctx, next) => {
+  ctx.state.res({
+    data: true
+  })
+})
+
 module.exports = appRouter.routes()
