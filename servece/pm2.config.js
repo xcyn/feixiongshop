@@ -4,7 +4,7 @@ module.exports = {
       {
           name: "feixiongshop-serve",
           script: "index.js",
-          watch: true,
+          // watch: true,
           // ignore_watch: [
           //     // 从监控目录中排除
           //     "node_modules",
