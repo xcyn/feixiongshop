@@ -35,7 +35,6 @@
     "koa-static-server": "^1.5.2",
     "lodash": "^4.17.11",
     "log4js": "^5.1.0",
-    "mysql2": "^2.2.5",
     "raw-body": "2.2.0",
     "redis": "^3.1.2",
     "request": "^2.88.2",
