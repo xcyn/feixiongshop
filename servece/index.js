@@ -31,7 +31,8 @@ app.use(koajwt({ secret: JWT_SECRET}).unless(
                '/goods-c/select-goodList-category',
                // /^\/goods\/*/,
                // /^\/fxapi\/*/,
-               'goods-c/pay_notify',
+               '/fxapi/goods-c/select-goodList-category',
+               '/goods-c/pay_notify',
                /^\/user\/*/
           ]
      })
