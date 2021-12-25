@@ -117,7 +117,7 @@ appRouter.get('/checkLogin', async(ctx, next) => {
 // 骗微信审核
 appRouter.get('/isWxAudit', async(ctx, next) => {
   ctx.state.res({
-    data: true
+    data: false
   })
 })
 
