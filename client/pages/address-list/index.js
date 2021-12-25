@@ -6,6 +6,9 @@ Page({
     selectId: 1,
     addressList: []
   },
+  onShow() {
+    this.getAddressList()
+  },
   onLoad(options) {
     this.getAddressList()
     app.globalEvent.on('loginSuccess', () => {
@@ -13,6 +16,7 @@ Page({
     })
   },
   async getAddressList() {
+    wx.showToast({title: '加载地址中....', icon: 'loading', duration: 5000});
     const userInfo = app.globalData.userInfo
     const res = await app.request({
       url: '/goods-c/select-user-address',
@@ -38,6 +42,7 @@ Page({
              }
           })
           if(res2 && res2.errno === 0) {
+            wx.hideToast();
             this.getAddressList()
           }
           return
@@ -69,7 +74,7 @@ Page({
           uiList.push(item)
         }
       }
-      console.log('uiList', uiList)
+      wx.hideToast();
       this.setData({
         addressList: res.data || []
       })
@@ -106,11 +111,12 @@ Page({
     if(res && res.errno === 0) {
       wx.navigateBack({
         delta: 1,
-        success: function () {
-          let page = getCurrentPages().pop();
-          if (page == undefined || page == null) return;
-          page.onLoad();
-        }
+        // success: function (e) {
+        //   let page = getCurrentPages().pop();
+        //   if (page == undefined || page == null) return;
+        //   console.log('e', e)
+        //   page.onLoad();
+        // }
       }) 
     }
   }

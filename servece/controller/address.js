@@ -110,7 +110,6 @@ appRouter.post('/update-address', async(ctx, next) => {
 appRouter.post('/update-default-address', async(ctx, next) => {
   let { 
     userId,
-    telNumber,
     id
   } = ctx.request.body
   const sequelize = await ctx.state.orm.db(database).sequelize()
@@ -121,15 +120,14 @@ appRouter.post('/update-default-address', async(ctx, next) => {
     await addressTable.sync({ force: false }); //创建表
     let curAddress = await addressTable.findAll({
       where: {
-        userId,
-        telNumber,
+        userId
       }
     }, {transaction: t})
     for(let i = 0; i < curAddress.length; i++) {
       let idIns = curAddress[i].id
       const isDefault = id === idIns
       await addressTable.update({
-        isDefault: isDefault
+        isDefault: isDefault || false
       }, {
         where: {
           id: idIns
@@ -211,8 +209,16 @@ appRouter.get('/select-user-address', async(ctx, next) => {
   })
 })
 
+let allAddress = null
+
 // 查询所有地址
 appRouter.get('/select-all-address', async(ctx, next) => {
+  if(allAddress) {
+    ctx.state.res({
+      data: allAddress
+    })
+    return
+  }
   let allAddrs = await ctx.state.orm.db(database).table('address-code').select({
     where: {
       id: {
@@ -232,9 +238,6 @@ appRouter.get('/select-all-address', async(ctx, next) => {
       if(item.cityCode && !city_list[item.cityCode]) {
         city_list[item.cityCode] = item.cityName
       }
-      // if(item.counCode && !county_list[item.counCode]) {
-      //   county_list[item.counCode] = item.counName
-      // }
       // 支持前端组件处理
       if(!item.counCode) {
         county_list[`${item.cityCode}${i}`] = item.cityName
@@ -250,6 +253,7 @@ appRouter.get('/select-all-address', async(ctx, next) => {
     city_list,
     county_list,
   }
+  allAddress = areaList
   ctx.state.res({
     data: areaList
   })
