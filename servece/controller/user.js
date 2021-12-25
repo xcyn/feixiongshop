@@ -68,8 +68,11 @@ appRouter.post('/wx-login', async (ctx, next) => {
     console.log('未查到相关用户,开始通过数据库创建用户');
     user = await ctx.state.orm.db(database).table('user').insert(decryptedUserInfo)
     if(user) {
+      console.log('创建用户成功');
       user = [user]
     }
+    user = user && user[0]
+    decryptedUserInfo = user
   } else {
     user = user && user[0]
     user = user.get()
