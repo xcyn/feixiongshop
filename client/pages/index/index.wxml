@@ -28,7 +28,7 @@
       <view class="good-list">
         <view class="good-item" wx:for="{{goods}}" wx:key="index">
           <view class="good-item-logo">
-            <image src="{{item.url}}" />
+            <image mode="aspectFit" src="{{item.url}}" />
           </view>
           <view class="good-des">
             <view class="good-des-title">{{item.goods_name}}</view>

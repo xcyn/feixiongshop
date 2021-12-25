@@ -1,7 +1,6 @@
 // 主页
 const app = getApp()
 const qs = require('qs')
-
 Page({
   data: {
     isLogin: app.globalData.isLogin,
@@ -14,17 +13,23 @@ Page({
     app.globalEvent.on('loginSuccess', () => {
       this.setData({
         isLogin: app.globalData.isLogin
+      },() => {
+        this.getGoodsDetail()
       })
     })
   },
   _init(options) {
     let goodId = JSON.parse(options.goodId);
     this.setData({
+      isLogin: app.globalData.isLogin,
       goodId
     })
     this.getGoodsDetail()
   },
   async getGoodsDetail() {
+    if(!this.data.isLogin) {
+      return
+    }
     const { goodId } = this.data
     const res = await app.request({
       url: '/goods-c/select-goodInfo',
@@ -156,7 +161,6 @@ Page({
   // 跳转确认订单
   handleBuy() {
     const info = this.getCheckedSku()
-    console.log('info', info)
     if(info && info.goodId && info.skuInfo) {
       const urlParmas = qs.stringify(info)
       wx.navigateTo({

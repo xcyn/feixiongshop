@@ -30,7 +30,7 @@ appRouter.post('/wx-login', async (ctx, next) => {
     // token有可能是空的
     if (token) {
       try {
-        let payload = await util.promisify(jsonwebtoken.verify)(token, config.jwtSecret)
+        let payload = await util.promisify(jsonwebtoken.verify)(token, config.jwt_secret)
         console.log('payload', payload)
         if (payload) {
           sessionKey = payload.sessionKey
@@ -50,7 +50,6 @@ appRouter.post('/wx-login', async (ctx, next) => {
     openId = token.data.openid;
     let pc = new WXBizDataCrypt(config.miniProgramAppid, sessionKey)
     let info = pc.decryptData(encryptedData, iv)
-    console.log('info', info)
     decryptedUserInfo = info
     decryptedUserInfo.openId = openId
     // 清楚不必要字段
@@ -86,8 +85,8 @@ appRouter.post('/wx-login', async (ctx, next) => {
     openId: decryptedUserInfo.openId,
     sessionKey: sessionKey
   },
-    config.jwtSecret,
-    { expiresIn: '3d' } //修改为3天，这是sessionKey的有效时间
+    config.jwt_secret,
+    { expiresIn: '2d' } //修改为2天，比微信短一点
   )
 
   Object.assign(decryptedUserInfo, { authorizationToken })
@@ -98,10 +97,27 @@ appRouter.post('/wx-login', async (ctx, next) => {
   })
 })
 
+// 检测登录状态
+appRouter.get('/checkLogin', async(ctx, next) => {
+  let token = ctx.request.header.authorization;
+  token = token.split(' ')[1]
+  let payload = await util.promisify(jsonwebtoken.verify)(token, config.jwt_secret)
+  let user = await ctx.state.orm.db(database).table('user').select({
+    where: {
+      openId: payload.openId
+    }
+  })
+  user = user && user[0]
+  ctx.state.res({
+    errmsg: '用户已是登录状态',
+    data: user
+  })
+})
+
 // 骗微信审核
 appRouter.get('/isWxAudit', async(ctx, next) => {
   ctx.state.res({
-    data: false
+    data: true
   })
 })
 

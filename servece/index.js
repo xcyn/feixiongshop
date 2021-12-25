@@ -1,10 +1,7 @@
 const koa = require('koa');
 // 系统中间件
 const koaBody = require('koa-body')
-const session = require('koa-session')
-const store = require('koa-session-local')
 const koajwt = require('koa-jwt');
-const jsonwebtoken = require('jsonwebtoken');
 const appRoute = require('./routes')
 const serve = require('koa-static-server')
 // 定义全局路径
@@ -16,9 +13,9 @@ let cross = require('./middleware/cross');
 let response = require('./middleware/response');
 let catchError = require('./middleware/catch-error')
 let orm = require('./middleware/orm')
-let cookie = require('./middleware/cookie')
+const config = require('./config/key-config');
 
-const JWT_SECRET = 'JWT_SECRET'
+const JWT_SECRET = config.jwt_secret
 
 
 const app = new koa();
@@ -31,11 +28,9 @@ app.use(catchError)
 app.use(koajwt({ secret: JWT_SECRET}).unless(
      {
           path: [
-               '/ormTest',
-               '/addOrmTest',
-               '/test',
-               /^\/goods\/*/,
-               /^\/fxapi\/*/,
+               '/goods-c/select-goodList-category',
+               // /^\/goods\/*/,
+               // /^\/fxapi\/*/,
                /^\/user\/*/
           ]
      })

@@ -12,7 +12,11 @@
         <view class="s-t-i">
           <text>·</text>只是提供更好的服务</view>
       </view>
-      <button class="l" open-type="getUserInfo" lang="zh_CN"  bindtap="processLogin">允许</button>
+      <button class="l" open-type="getUserInfo" lang="zh_CN"  bindtap="processLogin">
+        {{
+          isLogining ? isLogining: '允许'
+        }}
+      </button>
       <!-- <button class="c" bindtap="cancelLogin" type="default">暂不登录</button> -->
     </view>
   </view>
