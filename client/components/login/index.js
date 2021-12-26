@@ -73,7 +73,7 @@ Component({
         if(result && result.errno === 1000
           && result.errmsg === 'Illegal Buffer'
           ) {
-            if(retry <= 3) {
+            if(retry <= 5) {
               const data = await app.wxp.getUserInfo() || {}
               console.log('正在重试登录....', userInfo, code, data)
               this.login.apply(this, [userInfo, data.encryptedData, data.iv, sessionIsValid, ++retry])

@@ -30,6 +30,7 @@ const request = ({
                   })
                   const app = getApp()
                   app.globalData = {}
+                  wx.setStorageSync('token', '')
                   setTimeout(() => {
                     wx.switchTab({
                       url: `/pages/index/index`,
