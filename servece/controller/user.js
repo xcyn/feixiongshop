@@ -16,6 +16,7 @@ let appRouter = new Router({
 
 appRouter.post('/wx-login', async (ctx, next) => {
   let { code,
+    userInfo,
     encryptedData,
     iv,
     sessionKeyIsValid } = ctx.request.body
@@ -50,6 +51,7 @@ appRouter.post('/wx-login', async (ctx, next) => {
     openId = token.data.openid;
     let pc = new WXBizDataCrypt(config.miniProgramAppid, sessionKey)
     let info = pc.decryptData(encryptedData, iv)
+    info = Object.assign({}, info, userInfo)
     decryptedUserInfo = info
     decryptedUserInfo.openId = openId
     // 清楚不必要字段
@@ -72,7 +74,9 @@ appRouter.post('/wx-login', async (ctx, next) => {
       user = [user]
     }
     user = user && user[0]
+    user = user.get()
     decryptedUserInfo = user
+    console.log('创建用户成功: decryptedUserInfo', decryptedUserInfo)
   } else {
     user = user && user[0]
     user = user.get()
@@ -120,7 +124,7 @@ appRouter.get('/checkLogin', async(ctx, next) => {
 // 骗微信审核
 appRouter.get('/isWxAudit', async(ctx, next) => {
   ctx.state.res({
-    data: false
+    data: true
   })
 })
 

@@ -75,8 +75,8 @@ Component({
           ) {
             if(retry <= 3) {
               const data = await app.wxp.getUserInfo() || {}
-              console.log('正在重试登录....', code)
-              this.login.apply(this, [data.userInfo, data.encryptedData, data.iv, sessionIsValid, ++retry])
+              console.log('正在重试登录....', userInfo, code, data)
+              this.login.apply(this, [userInfo, data.encryptedData, data.iv, sessionIsValid, ++retry])
             } else {
               app.wxp.showToast({
                 title: '登录失败，请重新登录!',
