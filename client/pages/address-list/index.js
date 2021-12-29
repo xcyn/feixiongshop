@@ -70,7 +70,7 @@ Page({
            }
         })
         if(res && res.data) {
-          item.title = `${res.data.provName}${res.data.cityName}${res.data.provName}`
+          item.title = `${res.data.provName}${res.data.cityName}${res.data.counName}`
           uiList.push(item)
         }
       }

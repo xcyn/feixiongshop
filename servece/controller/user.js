@@ -25,27 +25,45 @@ appRouter.post('/wx-login', async (ctx, next) => {
   // 解密openId
   let decryptedUserInfo = {}
   // 如果seesonKey未过期，直接取缓存
+  console.log(`serve-log:进入wx-login接口: 
+    sessionKeyIsValid: ${sessionKeyIsValid}
+  `)
   if (sessionKeyIsValid) {
     let token = ctx.request.header.authorization;
     token = token.split(' ')[1]
     // token有可能是空的
+    console.log(`serve-log:是否存在token: 
+      token: ${token}
+    `)
     if (token) {
       try {
         let payload = await util.promisify(jsonwebtoken.verify)(token, config.jwt_secret)
+        console.log(`serve-log:payload: 
+          payload: ${payload}
+        `)
         console.log('payload', payload)
         if (payload) {
           sessionKey = payload.sessionKey
           openId = payload.openId
         }
       } catch(err) {
+        console.log(`serve-log:jsonwebtoken解密报错:
+          err: ${err}
+        `)
         throw err
       }
     }
   }
 
   // 如果sessionKey没有过期，但是没有token
+  console.log(`serve-log:是否有sessionKey:
+    sessionKey: ${sessionKey}
+  `)
   if (!sessionKey) {
     const token = await weixinAuth.getAccessToken(code)
+    console.log(`serve-log:无sessionKey:
+      获取新的token: ${token}
+    `)
     // 目前微信的 session_key, 有效期3天
     sessionKey = token.data.session_key;
     openId = token.data.openid;
@@ -60,30 +78,47 @@ appRouter.post('/wx-login', async (ctx, next) => {
     }
   }
 
+  console.log(`serve-log:查询到user:
+    如参openId: ${openId}
+  `)
   let user = await ctx.state.orm.db(database).table('user').select({
     where: {
       openId: openId
     }
   })
 
+  console.log(`serve-log:查询到user:
+    user: ${user}
+  `)
+
   if (!user || !user.length) {
-    console.log('未查到相关用户,开始通过数据库创建用户');
+    console.log(`serve-log:查询到user结果:
+      未查到相关用户, 开始通过数据库创建用户
+    `)
     user = await ctx.state.orm.db(database).table('user').insert(decryptedUserInfo)
     if(user) {
-      console.log('创建用户成功');
+      console.log(`serve-log:创建用户:
+        创建用户成功
+      `)
       user = [user]
     }
     user = user && user[0]
     user = user.get()
     decryptedUserInfo = user
-    console.log('创建用户成功: decryptedUserInfo', decryptedUserInfo)
+    console.log(`serve-log:创建用户:创建用户成功:
+      decryptedUserInfo: ${decryptedUserInfo}
+    `)
   } else {
     user = user && user[0]
     user = user.get()
     decryptedUserInfo = user
-    console.log('数据库中查到用户:', user.id, user.nickName);
+    console.log(`serve-log:数据库中查到用户:
+      userId: ${user.id},
+      nickName: ${user.nickName},
+    `)
   }
 
+  console.log(`serve-log:开始生成jwt`)
   // 添加openId与sessionKey今天jwt
   let authorizationToken = jsonwebtoken.sign({
     uid: user.id,
@@ -95,6 +130,7 @@ appRouter.post('/wx-login', async (ctx, next) => {
     config.jwt_secret,
     { expiresIn: '2d' } //修改为2天，比微信短一点
   )
+  console.log(`serve-log:生成jwt成功`)
 
   Object.assign(decryptedUserInfo, { authorizationToken })
 
