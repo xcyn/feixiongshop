@@ -128,7 +128,7 @@ appRouter.post('/wx-login', async (ctx, next) => {
     sessionKey: sessionKey
   },
     config.jwt_secret,
-    { expiresIn: '2d' } //修改为2天，比微信短一点
+    { expiresIn: '3d' } // 和微信保持一致
   )
   console.log(`serve-log:生成jwt成功`)
 
