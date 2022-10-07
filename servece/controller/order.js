@@ -284,7 +284,7 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
     if(retobj) {
       // 商户单号
       let outTradeNo = retobj.out_trade_no
-      let resultCode = retobj.result_code
+      let resultCode = retobj.return_code
       // 交易单号
       let transactionId = retobj.transaction_id
       console.log(`serve-log:微信支付回调接口: 
@@ -314,7 +314,7 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
       `)
     }
     // 成功
-    let xml = success
+    let xml = 'success'
     ctx.body = xml;
   } catch (error) {
     console.log(`serve-log:微信支付回调接口: 
@@ -322,7 +322,7 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
       error-${error}
     `)
     // 失败
-    let xml = failure
+    let xml = 'failure'
     ctx.body = xml;
   }
 })
