@@ -279,7 +279,7 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
       raw = isTest
     }
     console.log('serve-log:微信支付回调接口:入参request.body:', ctx.request.body)
-    let retobj = await _parseXml(raw)
+    let retobj = raw
     console.log('serve-log:微信支付回调接口: _parseXml成功:', retobj)
     if(retobj) {
       // 商户单号
@@ -314,7 +314,7 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
       `)
     }
     // 成功
-    let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
+    let xml = success
     ctx.body = xml;
   } catch (error) {
     console.log(`serve-log:微信支付回调接口: 
@@ -322,7 +322,7 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
       error-${error}
     `)
     // 失败
-    let xml = _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
+    let xml = failure
     ctx.body = xml;
   }
 })
