@@ -108,7 +108,6 @@ Auth.prototype.processToken = function(data){
 Auth.prototype.getAccessToken = function(code){
 	return new Promise((resolve, reject) => {
 		const url = "https://api.weixin.qq.com/sns/jscode2session";
-		// const url = "https://api.weixin.qq.com/sns/oauth2/access_token";
 		const info = {
 			appid: this.appid,
 			secret: this.appsecret,

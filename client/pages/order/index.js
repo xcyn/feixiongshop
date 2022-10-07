@@ -71,6 +71,11 @@ Page({
       url: `/pages/address-list/index`,
     })
   },
+  setPaying(newPayingData) {
+    this.setData({
+      paying: newPayingData
+    })
+  },
   // 下单
   handleSubmit() {
     const { openId, id } = this.data.userInfo
@@ -105,7 +110,7 @@ Page({
     })
       .then(async() => {
         const res = await app.request({
-          url: '/goods-c/create-order',
+          url: '/goods-c/create-order-new',
           method: 'post',
           data:{
             openId: openId,
@@ -118,6 +123,69 @@ Page({
            }
         })
         console.log('res', res)
+        let extraData = res && res.data && res.data.res
+        if(!extraData) {
+          app.wxp.showToast({
+            title: '不能跳转支付',
+            icon:'error'
+          })
+        }
+        wx.onAppShow(appOptions => {
+          if (!this.data.paying) return;
+          console.log('appOptions', appOptions)
+  
+          // 恢复支付前状态
+          this.setPaying(false)
+          
+          if (appOptions.scene === 1038 && appOptions.referrerInfo.appId === 'wx2574b5c5ee8da56b') {
+            // 来源于 xunhupay 小程序返回
+            console.log('确认来源于 xunhupay 回调返回')
+            let extraData = appOptions.referrerInfo.extraData
+            if (extraData.success) {
+              app.wxp.showToast({
+                title: '支付成功',
+              })
+              // 跳转支付成功列表
+              wx.redirectTo({
+                url: `/pages/order-list/index`,
+              })
+            } else {
+              app.wxp.showToast({
+                title: '支付失败',
+                icon:'error'
+              })
+              // 跳转未支付列表
+              wx.redirectTo({
+                url: `/pages/order-list/index`,
+              })
+            }
+          }
+        })
+        // 第三方迅虎对接流程
+        wx.navigateToMiniProgram({
+          appId: 'wx2574b5c5ee8da56b',
+          path: 'pages/cashier/cashier',
+          extraData: extraData,
+          envVersion: 'release',
+          success: r => {
+            // 成功跳转：标记支付中状态
+            this.setPaying(true)
+            console.log('跳转到 xunhupay 小程序成功', r)
+          },
+          fail: e => {
+            this.setPaying(false)
+            app.wxp.showToast({
+              title: '取消支付',
+              icon:'error'
+            })
+            // 跳转失败：弹出提示组件引导用户跳转
+            console.log('跳转到 xunhupay 小程序失败 - 准备弹窗提醒跳转', e)
+          }
+        })
+        return
+
+
+        // 个人商户号对接流程
         let payParmas = res && res.data && res.data.params || {}
         console.log('payParmas', payParmas)
         wx.requestPayment({

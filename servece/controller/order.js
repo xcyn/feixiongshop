@@ -7,7 +7,7 @@ const short = require('short-uuid');
 // 微信支付相关
 const wxpay = require('../lib/pay');
 const config = require('../config/key-config');
-const { _buildXml, _parseXml } = require('../lib/utils');
+const { _buildXml, _parseXml, getRandomNumber, getSign } = require('../lib/utils');
 
 // 创建订单
 appRouter.post('/create-order', async ctx => {
@@ -89,6 +89,56 @@ appRouter.post('/create-order', async ctx => {
   }
 })
 
+// 创建订单-新版-对接第三方迅虎支付
+appRouter.post('/create-order-new', async ctx => {
+  let {
+    openId,
+    userId,
+    totalFee,
+    addressId,
+    addressDesc,
+    goodsCartsIds,
+    goodsNameDesc,
+   } = ctx.request.body
+   if(!userId || !totalFee || !addressId ||
+    !addressDesc || !goodsCartsIds || !goodsNameDesc
+    ) {
+      throw new Error('参数有误')
+  }
+  // 为测试方便，所有金额支付数均为1分
+  totalFee = totalFee * 100
+  let payState = 0
+  // 依照Order模型接收参数
+  let outTradeNo = `${new Date().getFullYear()}${short().new()}`
+  console.log('outTradeNo', outTradeNo);
+  console.log('ctx.request.i', ctx.request.ip)
+  console.log('openId', openId)
+  console.log('openId', openId)
+  console.log('getRandomNumber', getRandomNumber)
+  console.log('getSign', getSign)
+  // 获取订单的预支付信息
+  let paramsObject = {
+    'mchid': config.mch_id_xunhu, // 商户号
+    'out_trade_no': outTradeNo,
+    'total_fee': totalFee,
+    'body': '飞熊学习支付',
+    'notify_url': config.notify_url_xunhu,
+    'attach': '',
+    'goods_detail': '',
+    'nonce_str': getRandomNumber(),
+  }
+  let sign = getSign(paramsObject)
+  paramsObject.sign = sign
+  ctx.status = 200
+  ctx.body = {
+    code: 200,
+    msg: 'ok',
+    data: {
+      res: paramsObject,
+    }
+  }
+})
+
 // 取消订单
 appRouter.post('/cancel-order', async ctx => {
   let {
@@ -164,6 +214,64 @@ appRouter.get('/get-orders', async(ctx, next) => {
 
 // 微信支付回调接口
 appRouter.all('/pay_notify', async (ctx) => {
+  let isTest = ctx.request.query.test
+  try {
+    let raw = ctx.request.body;
+    if(isTest) {
+      raw = isTest
+    }
+    console.log('serve-log:微信支付回调接口:入参request.body:', ctx.request.body)
+    let retobj = await _parseXml(raw)
+    console.log('serve-log:微信支付回调接口: _parseXml成功:', retobj)
+    if(retobj) {
+      // 商户单号
+      let outTradeNo = retobj.out_trade_no
+      let resultCode = retobj.result_code
+      // 交易单号
+      let transactionId = retobj.transaction_id
+      console.log(`serve-log:微信支付回调接口: 
+        retobj相关参数:
+        outTradeNo-${outTradeNo},
+        resultCode-${resultCode},
+        transactionId-${transactionId}
+      `)
+      let payState = 0
+      if (resultCode === 'SUCCESS'){
+        payState = 1
+      }else{
+        payState = 2
+      }
+      let orderRes = await ctx.state.orm.db(database).table('order').update({
+        data: {
+          payState,
+          transactionId
+        },
+        where: {
+          outTradeNo
+        }
+      })
+      console.log(`serve-log:微信支付回调接口: 
+        订单状态更新成功:
+        orderRes-${orderRes}
+      `)
+    }
+    // 成功
+    let xml = _buildXml({return_code: 'SUCCESS', return_msg: 'OK'})
+    ctx.body = xml;
+  } catch (error) {
+    console.log(`serve-log:微信支付回调接口: 
+      支付回调接收失败:
+      error-${error}
+    `)
+    // 失败
+    let xml = _buildXml({return_code: 'FAILURE', return_msg: 'FAIL'})
+    ctx.body = xml;
+  }
+})
+
+
+// 微信支付回调接口-迅虎支付
+appRouter.all('/pay_notify_xunhu', async (ctx) => {
   let isTest = ctx.request.query.test
   try {
     let raw = ctx.request.body;

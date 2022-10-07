@@ -25,18 +25,18 @@ app.use(cross)
 app.use(response)
 app.use(catchError)
 // 鉴权
-app.use(koajwt({ secret: JWT_SECRET}).unless(
-     {
-          path: [
-               '/goods-c/select-goodList-category',
-               // /^\/goods\/*/,
-               // /^\/fxapi\/*/,
-               '/fxapi/goods-c/select-goodList-category',
-               '/goods-c/pay_notify',
-               /^\/user\/*/
-          ]
-     })
-)
+// app.use(koajwt({ secret: JWT_SECRET}).unless(
+//      {
+//           path: [
+//                '/goods-c/select-goodList-category',
+//                // /^\/goods\/*/,
+//                // /^\/fxapi\/*/,
+//                '/fxapi/goods-c/select-goodList-category',
+//                '/goods-c/pay_notify',
+//                /^\/user\/*/
+//           ]
+//      })
+// )
 // orm
 app.use(orm)
 app.use(serve({rootDir: 'public', rootPath: '/public'}))

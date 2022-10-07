@@ -93,7 +93,9 @@ appRouter.post('/wx-login', async (ctx, next) => {
 
   if (!user || !user.length) {
     console.log(`serve-log:查询到user结果:
-      未查到相关用户, 开始通过数据库创建用户
+      未查到相关用户, 开始通过数据库创建用户,
+      创建信息:
+      ${JSON.stringify(decryptedUserInfo)}
     `)
     user = await ctx.state.orm.db(database).table('user').insert(decryptedUserInfo)
     if(user) {

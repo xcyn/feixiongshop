@@ -1,7 +1,7 @@
 const dayJs = require('dayjs');
 const fs = require('fs');
-const path = require('path');
 const xml2js = require('xml2js');
+const { secret_xunhu } = require('../config/key-config');
 
 function Sx (num) {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(num)
@@ -70,10 +70,40 @@ function _parseXml(xml) {
     });
   });
 }
+const getRandomNumber = (minNum = 1000000000, maxNum = 99999999999999) => parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+
+const getSign = obj => {
+  /*
+   * 签名算法
+   * 
+   * 由于密钥不应该在小程序内出现，因此生产环境下的小程序不应该包含此参数
+   */
+
+  let keys = Object.keys(obj)
+  keys.sort()
+
+  let params = []
+
+  keys.forEach(e => {
+    if (obj[e] != '') {
+      params.push(e + '=' + obj[e])
+    }
+  })
+
+  params.push('key=' + secret_xunhu)
+
+  let paramStr = params.join('&')
+  const md5Util = require('./md5.js')
+  let signResult = md5Util.md5(paramStr).toUpperCase() 
+
+  return signResult
+}
 
 module.exports = {
   get_spu_no,
   upload2Cdn,
   _buildXml,
-  _parseXml
+  _parseXml,
+  getRandomNumber,
+  getSign
 }
