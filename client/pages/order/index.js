@@ -141,23 +141,27 @@ Page({
             // 来源于 xunhupay 小程序返回
             console.log('确认来源于 xunhupay 回调返回')
             let extraData = appOptions.referrerInfo.extraData
-            if (extraData.success) {
+            if (extraData.paySuccess) {
               app.wxp.showToast({
                 title: '支付成功',
               })
-              // 跳转支付成功列表
-              wx.redirectTo({
-                url: `/pages/order-list/index`,
-              })
+              setTimeout(() => {
+                // 跳转支付成功列表
+                wx.redirectTo({
+                  url: `/pages/order-list/index`,
+                })
+              }, 1000);
             } else {
               app.wxp.showToast({
                 title: '支付失败',
                 icon:'error'
               })
-              // 跳转未支付列表
-              wx.redirectTo({
-                url: `/pages/order-list/index`,
-              })
+              setTimeout(() => {
+                // 跳转未支付列表
+                wx.redirectTo({
+                  url: `/pages/order-list/index`,
+                })
+              }, 1000);
             }
           }
         })
