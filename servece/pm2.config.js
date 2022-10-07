@@ -4,7 +4,7 @@ module.exports = {
       {
         name: "feixiongshop-serve",
         script: "index.js",
-        instances: 'max',
+        instances: '1',
         watch: false,
         ignore_watch: [
             // 从监控目录中排除
