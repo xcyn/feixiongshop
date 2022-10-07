@@ -129,10 +129,35 @@ appRouter.post('/create-order-new', async ctx => {
   }
   let sign = getSign(paramsObject)
   paramsObject.sign = sign
+
+  let errRes = '';
+  let res = '';
+  if (paramsObject && paramsObject.sign && paramsObject.mchid) {
+    // 创建记录
+    res = await ctx.state.orm.db(database).table('order').findOrCreate({
+      where: {
+        userId,
+        outTradeNo,
+        payState,
+        totalFee,
+        addressId,
+        addressDesc,
+        goodsCartsIds,
+        goodsNameDesc,
+      }
+    })
+    if (!res) {
+      errRes = 'db create error';
+    }
+  } else {
+    errRes = 'error! getBrandWCPayRequestParams() return null!'
+    console.log(errRes);
+  }
+
   ctx.status = 200
   ctx.body = {
     code: 200,
-    msg: 'ok',
+    msg: !errRes ? 'ok' : '',
     data: {
       res: paramsObject,
     }
