@@ -278,16 +278,16 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
     if(isTest) {
       raw = isTest
     }
-    console.log('serve-log:微信支付回调接口:入参request.body:', ctx.request.body)
+    console.log('serve-log:xunhu微信支付回调接口:入参request.body:', ctx.request.body)
     let retobj = raw
-    console.log('serve-log:微信支付回调接口: _parseXml成功:', retobj)
+    console.log('serve-log:xunhu微信支付回调接口: _parseXml成功:', retobj)
     if(retobj) {
       // 商户单号
       let outTradeNo = retobj.out_trade_no
       let resultCode = retobj.return_code
       // 交易单号
       let transactionId = retobj.transaction_id
-      console.log(`serve-log:微信支付回调接口: 
+      console.log(`serve-log:xunhu微信支付回调接口: 
         retobj相关参数:
         outTradeNo-${outTradeNo},
         resultCode-${resultCode},
@@ -299,6 +299,9 @@ appRouter.all('/pay_notify_xunhu', async (ctx) => {
       }else{
         payState = 2
       }
+      console.log(`serve-log:xunhu微信支付回调接口: 
+      payState:${payState}
+    `)
       let orderRes = await ctx.state.orm.db(database).table('order').update({
         data: {
           payState,
