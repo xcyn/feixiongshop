@@ -18,7 +18,7 @@ module.exports = {
             "log",
             "crash"
         ],
-        max_memory_restart: '150M'
+        max_memory_restart: '300M'
       }
   ]
 }
